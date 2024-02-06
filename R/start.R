@@ -8,6 +8,8 @@ model <- '
   # regressions
     dem60 ~ ind60
     dem65 ~ ind60 + dem60
+  # residual correlations
+    y1 ~~ y5
 '
 
 lavaan_model <- sem(model,
@@ -69,9 +71,23 @@ for(v in variables){
 
   # extract residual variance
   if(any((parameter_table$lhs == v) & (parameter_table$op == "~~") & (parameter_table$rhs == v))){
-    pars[["sd"]] <- sqrt(parameter_table$est[(parameter_table$lhs == v) &
-                                               (parameter_table$op == "~~") &
-                                               (parameter_table$rhs == v)])
+
+    # check if the item also has a covariance
+    if(any((parameter_table$lhs == v) & (parameter_table$op == "~~") & (parameter_table$rhs != v)) |
+       any((parameter_table$lhs != v) & (parameter_table$op == "~~") & (parameter_table$rhs == v))){
+      pars[["sd"]] <- 0
+      # add additional latent variable instead
+      regressions[[paste0("phantom_lv_", v)]] <- list(
+        coef = c("(Intercept)" = 0.0),
+        sd = sqrt(parameter_table$est[(parameter_table$lhs == v) &
+                                        (parameter_table$op == "~~") &
+                                        (parameter_table$rhs == v)])
+      )
+    }else{
+      pars[["sd"]] <- sqrt(parameter_table$est[(parameter_table$lhs == v) &
+                                                 (parameter_table$op == "~~") &
+                                                 (parameter_table$rhs == v)])
+    }
   }else{
     pars[["sd"]] <- 0.0
   }
@@ -86,8 +102,8 @@ for(i in which((parameter_table$op == "~~") & (parameter_table$lhs != parameter_
 
   add_coef <- c(1)
   names(add_coef) <- parameter_table$label[i]
-  regressions[[parameter_table$lhs[i]]][["coef"]] <- c(regressions[[parameter_table$lhs[i]]][["coef"]], add_coef)
-  regressions[[parameter_table$rhs[i]]][["coef"]] <- c(regressions[[parameter_table$rhs[i]]][["coef"]], add_coef)
+  regressions[[paste0("phantom_lv_", parameter_table$lhs[i])]][["coef"]] <- c(regressions[[paste0("phantom_lv_", parameter_table$lhs[i])]][["coef"]], add_coef)
+  regressions[[paste0("phantom_lv_", parameter_table$rhs[i])]][["coef"]] <- c(regressions[[paste0("phantom_lv_", parameter_table$rhs[i])]][["coef"]], add_coef)
 }
 
 # create network
@@ -120,8 +136,8 @@ sim <- bnlearn::rbn(x = cfit, n = 10000)
 fit_sim <- sem(model,
                data = sim[,lavaan_model@Data@ov.names[[1]]],
                meanstructure = TRUE)
-coef(fit_sim)
-coef(lavaan_model)
+round(coef(fit_sim) -
+        coef(lavaan_model), 3)
 
 bnlearn::cpdist(fitted = cfit,
                 nodes = "dem60",
