@@ -36,9 +36,96 @@ for(p in 1:nrow(parameter_table)){
                                      parameter_table$rhs[p])
 }
 
+# check for covariances
+if(any((parameter_table$op == "~~") & (parameter_table$lhs != parameter_table$rhs))){
+  message("Found covariances in your model. The model will be translated to an equivalent model with ",
+          "phantom variables.")
+  for(i in which((parameter_table$op == "~~") & (parameter_table$lhs != parameter_table$rhs))){
+
+    cov_at <- parameter_table[i,]
+    # we need to add a latent phantom variable
+    new_phantom <- cov_at
+    new_phantom$id = max(parameter_table$id) + 1
+    new_phantom$lhs <- paste0("ph_", parameter_table$label[i])
+    new_phantom$op <- "~1"
+    new_phantom$rhs <- ""
+    new_phantom$free <- 0
+    new_phantom$label <- paste0(cov_at$label, "~1")
+    new_phantom$plabel <- paste0(".p",nrow(parameter_table) + 1,".")
+    new_phantom$start <- 0
+    new_phantom$est <- 0
+    new_phantom$se <- 0
+
+    parameter_table <- rbind(parameter_table,
+                             new_phantom)
+
+    new_phantom <- cov_at
+    new_phantom$id = max(parameter_table$id) + 1
+    new_phantom$lhs <- paste0("ph_", parameter_table$label[i])
+    new_phantom$op <- "~~"
+    new_phantom$rhs <- paste0("ph_", parameter_table$label[i])
+    new_phantom$free <- max(parameter_table$free) + 1
+    new_phantom$label <- paste0(paste0("ph_", parameter_table$label[i]), "~~",
+                                paste0("ph_", parameter_table$label[i]))
+    new_phantom$plabel <- paste0(".p",nrow(parameter_table) + 1,".")
+    new_phantom$start <- 1
+    new_phantom$est <- 1
+    new_phantom$se <- 0
+
+    parameter_table <- rbind(parameter_table,
+                             new_phantom)
+
+    # additionally, we need to specify loadings on the covarying items
+    new_phantom <- cov_at
+    new_phantom$id = max(parameter_table$id) + 1
+    new_phantom$lhs <- paste0("ph_", parameter_table$label[i])
+    new_phantom$op <- "=~"
+    new_phantom$rhs <- parameter_table$lhs[i]
+    new_phantom$free <- 0
+    new_phantom$label <- cov_at$label
+    new_phantom$plabel <- paste0(".p",nrow(parameter_table) + 1,".")
+    new_phantom$start <- 1
+    new_phantom$est <- 1
+    new_phantom$se <- 0
+
+    parameter_table <- rbind(parameter_table,
+                             new_phantom)
+
+    new_phantom <- cov_at
+    new_phantom$id = max(parameter_table$id) + 1
+    new_phantom$lhs <- paste0("ph_", parameter_table$label[i])
+    new_phantom$op <- "=~"
+    new_phantom$rhs <- parameter_table$rhs[i]
+    new_phantom$free <- 0
+    new_phantom$label <- cov_at$label
+    new_phantom$plabel <- paste0(".p",nrow(parameter_table) + 1,".")
+    new_phantom$start <- 1
+    new_phantom$est <- 1
+    new_phantom$se <- 0
+
+    parameter_table <- rbind(parameter_table,
+                             new_phantom)
+
+  }
+
+  parameter_table <- parameter_table[!((parameter_table$op == "~~") & (parameter_table$lhs != parameter_table$rhs)),]
+
+  call_lavaan <- list(model = parameter_table,
+                      data = lavaan_model@Data)
+  call_lavaan <- c(call_lavaan,
+                   lavaan_model@Options[names(lavOptions())])
+
+  lavaan_model_int <- do.call(what = lavaan::lavaan,
+                              args = call_lavaan)
+}else{
+  lavaan_model_int <- lavaan_model
+}
+
+parameter_table <- lavaan_model_int@ParTable |> as.data.frame()
+
+
 # remove equality constraints
 parameter_table <- parameter_table[!parameter_table$op %in% c("<", ">", "=="),]
-
 parameter_table <- parameter_table[,c("lhs", "op", "rhs", "label", "est")]
 
 # we need to replace all effects with directed effects
