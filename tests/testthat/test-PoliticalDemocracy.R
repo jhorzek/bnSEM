@@ -1,0 +1,53 @@
+test_that("Political Democracy", {
+  library(lavaan)
+  library(banSEM)
+  set.seed(123)
+  model <- '
+  # latent variable definitions
+     ind60 =~ x1 + x2 + x3
+     dem60 =~ y1 + a*y2 + b*y3 + c*y4
+     dem65 =~ y5 + a*y6 + b*y7 + c*y8
+
+  # regressions
+    dem60 ~ ind60
+    dem65 ~ ind60 + dem60
+
+  # residual correlations
+    y1 ~~ y5
+    y2 ~~ y4 + y6
+    y3 ~~ y7
+    y4 ~~ y8
+    y6 ~~ y8
+'
+
+  lavaan_model <- sem(model,
+                      data = PoliticalDemocracy,
+                      meanstructure = TRUE)
+
+  network <- banSEM::banSEM(lavaan_model = lavaan_model)
+
+  # plot network
+  plot(network$dag)
+
+  # Check conditional distribution
+  # probability that dem65 in (1,2) given dem60 > 1:
+  bnlearn::cpquery(fitted = network$bayes_net,
+                   event = (dem65 > 1 & dem65 < 2),
+                   evidence = (dem60 > 1))
+
+  # Get distribution under this assumption:
+  dist <- bnlearn::cpdist(fitted = network$bayes_net,
+                          node = "dem65",
+                          evidence = (dem60 > 1))
+  hist(dist$dem65)
+
+  # simulate data from the network and refit SEM to check if the estimates align:
+  sim <- bnlearn::rbn(x = network$bayes_net, n = 100000)
+
+  fit_sim <- sem(model,
+                 data = sim[,lavaan_model@Data@ov.names[[1]]],
+                 meanstructure = TRUE)
+  testthat::expect_true(all(abs(coef(fit_sim) -
+                                  coef(lavaan_model)) / abs(coef(lavaan_model)) < .1))
+
+})
