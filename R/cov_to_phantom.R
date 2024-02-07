@@ -72,12 +72,11 @@ cov_to_phantom <- function(parameter_table,
                                            lhs = paste0("ph_", parameter_table$label[i]),
                                            op = "~~",
                                            rhs = paste0("ph_", parameter_table$label[i]),
-                                           free = max(parameter_table$free) + 1,
-                                           label = paste0(paste0("ph_", parameter_table$label[i]), "~~",
-                                                          paste0("ph_", parameter_table$label[i])),
+                                           free = parameter_table$free[i],
+                                           label = parameter_table$label[i],
                                            plabel = paste0(".p",nrow(parameter_table) + 1,"."),
-                                           start = 1,
-                                           est = 1,
+                                           start = parameter_table$start[i],
+                                           est = parameter_table$est[i],
                              ))
 
     # Additionally, we need to specify loadings of 1 on the covarying items
