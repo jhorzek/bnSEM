@@ -60,12 +60,12 @@ plot(network$dag)
 bnlearn::cpquery(fitted = network$bayes_net,
                  event = (dem65 > 1 & dem65 < 2),
                  evidence = (dem60 > 1))
-#> [1] 0.3360633
+#> [1] 0.3403033
 
 # Get distribution under this assumption:
 dist <- bnlearn::cpdist(fitted = network$bayes_net,
-                       node = "dem65",
-                       evidence = (dem60 > 1))
+                        node = "dem65",
+                        evidence = (dem60 > 1))
 hist(dist$dem65)
 ```
 
@@ -75,8 +75,8 @@ hist(dist$dem65)
 
 # Now check dem60 < -1
 dist <- bnlearn::cpdist(fitted = network$bayes_net,
-                       node = "dem65",
-                       evidence = (dem60 < -1))
+                        node = "dem65",
+                        evidence = (dem60 < -1))
 hist(dist$dem65)
 ```
 
@@ -94,17 +94,17 @@ fit_sim <- sem(model,
 round(abs(coef(fit_sim) -
             coef(lavaan_model)) / abs(coef(lavaan_model)), 3)
 #>    ind60=~x2    ind60=~x3            a            b            c            a 
-#>        0.004        0.004        0.011        0.010        0.006        0.011 
+#>        0.004        0.005        0.008        0.012        0.008        0.008 
 #>            b            c  dem60~ind60  dem65~ind60  dem65~dem60       y1~~y5 
-#>        0.010        0.006        0.026        0.013        0.003        0.003 
+#>        0.012        0.008        0.016        0.040        0.004        0.061 
 #>       y2~~y4       y2~~y6       y3~~y7       y4~~y8       y6~~y8       x1~~x1 
-#>        0.028        0.031        0.032        0.065        0.028        0.015 
+#>        0.037        0.074        0.005        0.164        0.037        0.049 
 #>       x2~~x2       x3~~x3       y1~~y1       y2~~y2       y3~~y3       y4~~y4 
-#>        0.001        0.023        0.019        0.029        0.017        0.014 
+#>        0.179        0.008        0.022        0.000        0.009        0.025 
 #>       y5~~y5       y6~~y6       y7~~y7       y8~~y8 ind60~~ind60 dem60~~dem60 
-#>        0.001        0.030        0.010        0.004        0.005        0.003 
+#>        0.025        0.048        0.009        0.010        0.010        0.007 
 #> dem65~~dem65         x1~1         x2~1         x3~1         y1~1         y2~1 
-#>        0.044        0.002        0.005        0.004        0.000        0.004 
+#>        0.027        0.000        0.001        0.001        0.000        0.003 
 #>         y3~1         y4~1         y5~1         y6~1         y7~1         y8~1 
-#>        0.002        0.001        0.002        0.002        0.001        0.000
+#>        0.005        0.002        0.000        0.008        0.002        0.000
 ```

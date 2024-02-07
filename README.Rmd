@@ -74,14 +74,14 @@ bnlearn::cpquery(fitted = network$bayes_net,
 
 # Get distribution under this assumption:
 dist <- bnlearn::cpdist(fitted = network$bayes_net,
-                       node = "dem65",
-                       evidence = (dem60 > 1))
+                        node = "dem65",
+                        evidence = (dem60 > 1))
 hist(dist$dem65)
 
 # Now check dem60 < -1
 dist <- bnlearn::cpdist(fitted = network$bayes_net,
-                       node = "dem65",
-                       evidence = (dem60 < -1))
+                        node = "dem65",
+                        evidence = (dem60 < -1))
 hist(dist$dem65)
 
 
