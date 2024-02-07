@@ -86,7 +86,7 @@ hist(dist$dem65)
 
 
 # simulate data from the network and refit SEM to check if the estimates align:
-sim <- bnlearn::rbn(x = network$bayes_net, n = 10000)
+sim <- bnlearn::rbn(x = network$bayes_net, n = 100000)
 
 fit_sim <- sem(model,
                data = sim[,lavaan_model@Data@ov.names[[1]]],
