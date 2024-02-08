@@ -1,0 +1,133 @@
+---
+title: "Example"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message=FALSE}
+library(banSEM)
+library(ggplot2)
+set.seed(123)
+```
+
+The following shows a basic comparison of the inference feature provided by
+the Bayesian Network translation of banSEM and a rejection sampling approach.
+
+The objective is to investigate the distribution of a latent variable $\eta$
+given different values of one of the indicators ($x_2$) of a second latent variable $\xi$.
+
+We want to fit the following model
+
+```{r}
+model <- ' 
+   xi =~ x1 + x2 + x3
+   eta =~ y1 + y2 + y3
+   eta ~ xi
+   
+   x2~~x3
+'
+```
+
+
+To this end, we simulate some data:
+```{r}
+# Simulation function:
+simulate_data <- function(n){
+  xi <- rnorm(n)
+  eta <- .4*xi + rnorm(n)
+  
+  unobs <- rnorm(n)
+  
+  x1 <- 1*xi + rnorm(n,0,.2)
+  x2 <- .7*xi + .3*unobs + rnorm(n,0,.2)
+  x3 <- .5*xi + .2*unobs + rnorm(n,0,.2)
+  
+  y1 <- 1*eta + rnorm(n,0,.2)
+  y2 <- .7*eta + rnorm(n,0,.2)
+  y3 <- .5*eta + rnorm(n,0,.2)
+  
+  return(data.frame(xi, eta,
+                    x1, x2, x3, y1, y2, y3))
+}
+
+data_set <- simulate_data(n = 100)
+```
+
+First, let's use banSEM to find the distribution of $\eta$ for $x_2 \in (-2, -1)$
+and $x_2 \in (1,3)$:
+
+```{r}
+# Now, we check if we can get the same distributions using a Bayesian Network:
+fit <- sem(model, 
+           data = data_set[,c("x1", "x2", "x3",
+                              "y1", "y2", "y3")],
+           meanstructure = TRUE)
+
+network <- banSEM::banSEM(lavaan_model = fit)
+
+dist_1 <- bnlearn::cpdist(fitted = network$bayes_net,
+                          node = "eta",
+                          evidence = (x2 > -2 & x2 < -1))
+dist_2 <- bnlearn::cpdist(fitted = network$bayes_net,
+                          node = "eta",
+                          evidence = (x2 > 1 & x2 < 3))
+```
+
+We want to compare the distributions to rejection sampling, where we simply simulate
+large samples and only keep those subjects that meet our criterion:
+
+```{r}
+target_n <- 10000
+rejection_sampling <- c()
+n <- 0
+max_it <- 10
+it <- 1
+while((n < target_n) & (it < max_it)){
+  data_ <- simulate_data(n = 1000000)
+  rejection_sampling_1 <- rbind(rejection_sampling,
+                                data_[data_$x2 > -2 & data_$x2 < -1,])
+  rejection_sampling_2 <- rbind(rejection_sampling,
+                                data_[data_$x2 > 1 & data_$x2 < 3,])
+  n <- min(nrow(rejection_sampling_1), 
+           nrow(rejection_sampling_2))
+  it <- it+1
+}
+```
+
+Comparing banSEM and rejection sampling, we find the following distributions for $\eta$:
+
+```{r, fig.width=6}
+combined <- rbind(data.frame(Type = "BN inference", 
+                             Set = paste0("x2 in (", -2, ", ", -1, ")"), 
+                             dist_1),
+                  data.frame(Type = "BN inference", 
+                             Set = paste0("x2 in (", 1, ", ", 3, ")"), 
+                             dist_2),
+                  data.frame(Type = "rejection sampling",
+                             Set = paste0("x2 in (", -2, ", ", -1, ")"), 
+                             eta = rejection_sampling_1[, "eta"]),
+                  data.frame(Type = "rejection sampling",
+                             Set = paste0("x2 in (", 1, ", ", 3, ")"), 
+                             eta = rejection_sampling_2[, "eta"])
+)
+
+combined$Type <- as.factor(combined$Type)
+combined$Set <- as.factor(combined$Set)
+
+ggplot(combined, 
+       aes(x = eta, color = Type, lty = Set)) +
+  geom_density() +
+  xlab(expression(eta)) +
+  theme_classic()
+```
+
