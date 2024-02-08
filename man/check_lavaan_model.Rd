@@ -4,10 +4,12 @@
 \alias{check_lavaan_model}
 \title{check_lavaan_model}
 \usage{
-check_lavaan_model(lavaan_model)
+check_lavaan_model(lavaan_model, phantom_free)
 }
 \arguments{
 \item{lavaan_model}{fitted lavaan model}
+
+\item{phantom_free}{what to free in the phantom variables. Currently only supports "variance"}
 }
 \description{
 Check if the lavaan model can be translated to bnlearn

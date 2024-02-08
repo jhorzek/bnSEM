@@ -2,8 +2,10 @@
 #'
 #' Check if the lavaan model can be translated to bnlearn
 #' @param lavaan_model fitted lavaan model
+#' @param phantom_free what to free in the phantom variables. Currently only supports "variance"
 #' @keywords internal
-check_lavaan_model <- function(lavaan_model){
+check_lavaan_model <- function(lavaan_model,
+                               phantom_free){
 
   # Check for mean structure
   if(!lavaan_model@Options$meanstructure){
@@ -20,4 +22,7 @@ check_lavaan_model <- function(lavaan_model){
   # check for categorical variables
   if(lavaan_model@Model@categorical)
     stop("Currently models with categorical variables are not supported")
+
+  if(!phantom_free %in% c("variance", "none"))
+    stop("Currently only phantom_free = 'variance' or 'none' is supported.")
 }

@@ -5,6 +5,7 @@
 #' distributions of the SEM.
 #'
 #' @param lavaan_model fitted lavaan model
+#' @param phantom_free what to free in the phantom variables. Currently only supports "variance"
 #' @returns list with
 #' \itemize{
 #'  \item{bayes_net: }{A fitted Bayesian network of class bn.fit}
@@ -64,11 +65,13 @@
 #'                meanstructure = TRUE)
 #' round(abs(coef(fit_sim) -
 #'             coef(lavaan_model)) / abs(coef(lavaan_model)), 3)
-banSEM <- function(lavaan_model){
+banSEM <- function(lavaan_model,
+                   phantom_free = "variance"){
 
   ##### Setup lavaan model & parameters ####
 
-  check_lavaan_model(lavaan_model = lavaan_model)
+  check_lavaan_model(lavaan_model = lavaan_model,
+                     phantom_free = phantom_free)
 
   # Extract parameter table
   parameter_table <- lavaan_model@ParTable |>
@@ -80,7 +83,8 @@ banSEM <- function(lavaan_model){
          (parameter_table$lhs != parameter_table$rhs))){
 
     lavaan_model_int <- cov_to_phantom(parameter_table,
-                                       lavaan_model)
+                                       lavaan_model,
+                                       phantom_free)
 
   }else{
 

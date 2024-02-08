@@ -4,10 +4,12 @@
 \alias{banSEM}
 \title{banSEM}
 \usage{
-banSEM(lavaan_model)
+banSEM(lavaan_model, phantom_free = "variance")
 }
 \arguments{
 \item{lavaan_model}{fitted lavaan model}
+
+\item{phantom_free}{what to free in the phantom variables. Currently only supports "variance"}
 }
 \value{
 list with

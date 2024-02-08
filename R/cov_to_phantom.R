@@ -8,6 +8,7 @@
 #' variance estimates will change.
 #' @param parameter_table parameter table of a lavaan model
 #' @param lavaan_model fitted lavaan model
+#' @param phantom_free what to free in the phantom variables. Currently only supports "variance"
 #' @returns fitted lavaan_model with phantom variables
 #' @importFrom methods is
 #' @keywords internal
@@ -39,7 +40,8 @@
 #'   banSEM:::add_labels() |>
 #'   banSEM:::cov_to_phantom(lavaan_model)
 cov_to_phantom <- function(parameter_table,
-                           lavaan_model){
+                           lavaan_model,
+                           phantom_free = "variance"){
 
   if(!is(parameter_table, "data.frame"))
     stop("parameter_table must be a data.frame. Use as.data.frame(parameter_table).")
@@ -76,11 +78,11 @@ cov_to_phantom <- function(parameter_table,
                                            lhs = paste0("ph_", parameter_table$label[i]),
                                            op = "~~",
                                            rhs = paste0("ph_", parameter_table$label[i]),
-                                           free = 0,
+                                           free = ifelse(phantom_free == "variance", max(parameter_table$free) + 1, 0),
                                            label = parameter_table$label[i],
                                            plabel = paste0(".p",nrow(parameter_table) + 1,"."),
-                                           start = abs(current_value),
-                                           est = abs(current_value),
+                                           start = ifelse(phantom_free == "variance", abs(current_value), 1),
+                                           est = ifelse(phantom_free == "variance", abs(current_value), 1),
                              ))
 
     # Additionally, we need to specify loadings of 1 / -1 on the covarying items

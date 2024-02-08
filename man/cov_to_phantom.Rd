@@ -4,12 +4,14 @@
 \alias{cov_to_phantom}
 \title{cov_to_phantom}
 \usage{
-cov_to_phantom(parameter_table, lavaan_model)
+cov_to_phantom(parameter_table, lavaan_model, phantom_free = "variance")
 }
 \arguments{
 \item{parameter_table}{parameter table of a lavaan model}
 
 \item{lavaan_model}{fitted lavaan model}
+
+\item{phantom_free}{what to free in the phantom variables. Currently only supports "variance"}
 }
 \value{
 fitted lavaan_model with phantom variables
