@@ -48,11 +48,15 @@ cov_to_phantom <- function(parameter_table,
           " equivalent model with phantom variables. The model with phantom ",
           "variables will be returned in the internal list as 'internal_model'")
 
+  # We constrain the estimates of all parameters we already know and only estimate
+  # the variances of variables that also covary
+  parameter_table$free[] <- 0
+
   for(i in which((parameter_table$op == "~~") & (parameter_table$lhs != parameter_table$rhs))){
 
     cov_at <- parameter_table[i,]
     # we need to add a latent phantom variable
-
+    current_value <- parameter_table$est[i]
     # Add intercept of 0
     parameter_table <- rbind(parameter_table,
                              add_parameter(id = max(parameter_table$id) + 1,
@@ -72,14 +76,16 @@ cov_to_phantom <- function(parameter_table,
                                            lhs = paste0("ph_", parameter_table$label[i]),
                                            op = "~~",
                                            rhs = paste0("ph_", parameter_table$label[i]),
-                                           free = parameter_table$free[i],
+                                           free = 0,
                                            label = parameter_table$label[i],
                                            plabel = paste0(".p",nrow(parameter_table) + 1,"."),
-                                           start = parameter_table$start[i],
-                                           est = parameter_table$est[i],
+                                           start = abs(current_value),
+                                           est = abs(current_value),
                              ))
 
-    # Additionally, we need to specify loadings of 1 on the covarying items
+    # Additionally, we need to specify loadings of 1 / -1 on the covarying items
+    # Note: For positive covariances the loadings are all 1. For negative covariances,
+    # the loadings on one item are 1 and on the other -1.
     parameter_table <- rbind(parameter_table,
                              add_parameter(id = max(parameter_table$id) + 1,
                                            lhs = paste0("ph_", parameter_table$label[i]),
@@ -89,8 +95,8 @@ cov_to_phantom <- function(parameter_table,
                                            label = paste0(parameter_table$lhs[i], "=~",
                                                           paste0("ph_", parameter_table$label[i])),
                                            plabel = paste0(".p",nrow(parameter_table) + 1,"."),
-                                           start = 1,
-                                           est = 1,
+                                           start = sign(current_value)*1,
+                                           est = sign(current_value)*1,
                              ))
 
 
@@ -106,6 +112,15 @@ cov_to_phantom <- function(parameter_table,
                                            start = 1,
                                            est = 1,
                              ))
+
+    # set variances free
+    parameter_table$free[(parameter_table$rhs == parameter_table$rhs[i]) &
+                           (parameter_table$lhs == parameter_table$rhs[i]) &
+                           (parameter_table$op == "~~")] <- max(parameter_table$free) + 1
+
+    parameter_table$free[(parameter_table$rhs == parameter_table$lhs[i]) &
+                           (parameter_table$lhs == parameter_table$lhs[i]) &
+                           (parameter_table$op == "~~")] <- max(parameter_table$free) + 1
 
   }
 
