@@ -86,7 +86,7 @@ sampling)
 bnlearn::cpquery(fitted = network$bayes_net,
                  event = (dem65 > 1 & dem65 < 2),
                  evidence = (dem60 > 1))
-#> [1] 0.3337351
+#> [1] 0.3427986
 
 # Get distribution under this assumption:
 dist <- bnlearn::cpdist(fitted = network$bayes_net,
@@ -117,21 +117,21 @@ sim <- bnlearn::rbn(x = network$bayes_net, n = 100000)
 fit_sim <- sem(model,
                data = sim[,lavaan_model@Data@ov.names[[1]]],
                meanstructure = TRUE)
-round(coef(fit_sim) - coef(lavaan_model))
+round(coef(fit_sim) - coef(lavaan_model), 3)
 #>    ind60=~x2    ind60=~x3            a            b            c            a 
-#>            0            0            0            0            0            0 
+#>        0.005        0.011        0.001       -0.005        0.000        0.001 
 #>            b            c  dem60~ind60  dem65~ind60  dem65~dem60       y1~~y5 
-#>            0            0            0            0            0            0 
+#>       -0.005        0.000       -0.016        0.002        0.002       -0.007 
 #>       y2~~y4       y2~~y6       y3~~y7       y4~~y8       y6~~y8       x1~~x1 
-#>            0            0            0            0            0            0 
+#>       -0.029        0.015       -0.005        0.000        0.035        0.000 
 #>       x2~~x2       x3~~x3       y1~~y1       y2~~y2       y3~~y3       y4~~y4 
-#>            0            0            0            0            0            0 
+#>        0.003        0.001       -0.002       -0.065        0.033       -0.013 
 #>       y5~~y5       y6~~y6       y7~~y7       y8~~y8 ind60~~ind60 dem60~~dem60 
-#>            0            0            0            0            0            0 
+#>        0.008        0.025       -0.005        0.015       -0.003        0.004 
 #> dem65~~dem65         x1~1         x2~1         x3~1         y1~1         y2~1 
-#>            0            0            0            0            0            0 
+#>       -0.006       -0.002       -0.004       -0.005       -0.010       -0.025 
 #>         y3~1         y4~1         y5~1         y6~1         y7~1         y8~1 
-#>            0            0            0            0            0            0
+#>       -0.007       -0.014       -0.005       -0.021       -0.019       -0.009
 ```
 
 ## Central Challenge

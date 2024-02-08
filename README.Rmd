@@ -117,7 +117,7 @@ sim <- bnlearn::rbn(x = network$bayes_net, n = 100000)
 fit_sim <- sem(model,
                data = sim[,lavaan_model@Data@ov.names[[1]]],
                meanstructure = TRUE)
-round(coef(fit_sim) - coef(lavaan_model))
+round(coef(fit_sim) - coef(lavaan_model), 3)
 ```
 
 ## Central Challenge 
