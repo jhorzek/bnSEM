@@ -79,6 +79,7 @@ network <- banSEM::banSEM(lavaan_model = lavaan_model)
 To get an impression of the network, you can create a plot:
 
 ```{r, eval=FALSE}
+library(qgraph)
 qgraph::qgraph(network$dag)
 ```
 ![](man/figures/pol_dem_plot.png)
