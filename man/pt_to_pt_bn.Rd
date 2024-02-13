@@ -4,10 +4,12 @@
 \alias{pt_to_pt_bn}
 \title{pt_to_pt_bn}
 \usage{
-pt_to_pt_bn(parameter_table)
+pt_to_pt_bn(parameter_table, mx_model_int)
 }
 \arguments{
 \item{parameter_table}{parameter table}
+
+\item{mx_model_int}{mxModel with replaced covariances}
 }
 \value{
 parameter table for bnlearn

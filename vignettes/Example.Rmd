@@ -68,12 +68,12 @@ and $x_2 \in (1,3)$:
 
 ```{r}
 # Now, we check if we can get the same distributions using a Bayesian Network:
-fit <- sem(model, 
-           data = data_set[,c("x1", "x2", "x3",
-                              "y1", "y2", "y3")],
-           meanstructure = TRUE)
+fit <- mxsem(model, 
+             data = data_set[,c("x1", "x2", "x3",
+                                "y1", "y2", "y3")]) |>
+  OpenMx::mxTryHard()
 
-network <- banSEM::banSEM(lavaan_model = fit)
+network <- banSEM::banSEM(mx_model = fit)
 
 dist_1 <- bnlearn::cpdist(fitted = network$bayes_net,
                           node = "eta",

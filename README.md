@@ -16,7 +16,7 @@ worth the dissuasion.”
 
 The objective of banSEM (**Ba**yesian **n**etwork **SEM**) is to easily
 transition from SEM to Bayesian Networks. To this end, **banSEM**
-translates SEM from `lavaan` to Bayesian networks in `bnlearn`.
+translates SEM from `OpenMx` to Bayesian networks in `bnlearn`.
 
 ## Installation
 
@@ -30,11 +30,10 @@ devtools::install_github("jhorzek/netSEM")
 
 ## Example
 
-We first estimate the SEM with lavaan. Importantly, the model **must be
-fitted with a meanstructure**!
+We first estimate the SEM with OpenMx.
 
 ``` r
-library(lavaan)
+library(mxsem)
 model <- '
   # latent variable definitions
      ind60 =~ x1 + x2 + x3
@@ -53,16 +52,16 @@ model <- '
     y6 ~~ y8
 '
 
-lavaan_model <- sem(model,
-                    data = PoliticalDemocracy,
-                    meanstructure = TRUE)
+mx_model <- mxsem(model,
+                  data = OpenMx::Bollen) |>
+  OpenMx::mxTryHard()
 ```
 
 Next, we translate the model to a Bayesian Network:
 
 ``` r
 library(banSEM)
-network <- banSEM::banSEM(lavaan_model = lavaan_model)
+network <- banSEM::banSEM(mx_model = mx_model)
 ```
 
 To get an impression of the network, you can create a plot:
@@ -87,7 +86,7 @@ sampling)
 bnlearn::cpquery(fitted = network$bayes_net,
                  event = (dem65 > 1 & dem65 < 2),
                  evidence = (dem60 > 1))
-#> [1] 0.3353904
+#> [1] 0.3389719
 
 # Get distribution under this assumption:
 dist <- bnlearn::cpdist(fitted = network$bayes_net,
@@ -115,24 +114,27 @@ network and refit our SEM to check if the estimates align:
 ``` r
 sim <- bnlearn::rbn(x = network$bayes_net, n = 100000)
 
-fit_sim <- sem(model,
-               data = sim[,lavaan_model@Data@ov.names[[1]]],
-               meanstructure = TRUE)
-round(coef(fit_sim) - coef(lavaan_model), 3)
-#>    ind60=~x2    ind60=~x3            a            b            c            a 
-#>       -0.005       -0.006       -0.002       -0.001       -0.004       -0.002 
-#>            b            c  dem60~ind60  dem65~ind60  dem65~dem60       y1~~y5 
-#>       -0.001       -0.004       -0.007        0.007       -0.001        0.008 
-#>       y2~~y4       y2~~y6       y3~~y7       y4~~y8       y6~~y8       x1~~x1 
-#>       -0.008       -0.001        0.009        0.035       -0.011        0.000 
-#>       x2~~x2       x3~~x3       y1~~y1       y2~~y2       y3~~y3       y4~~y4 
-#>        0.000        0.002       -0.015       -0.041        0.031        0.015 
-#>       y5~~y5       y6~~y6       y7~~y7       y8~~y8 ind60~~ind60 dem60~~dem60 
-#>        0.003        0.016        0.006        0.026        0.003        0.005 
-#> dem65~~dem65         x1~1         x2~1         x3~1         y1~1         y2~1 
-#>        0.000       -0.003       -0.005       -0.003        0.005       -0.003 
-#>         y3~1         y4~1         y5~1         y6~1         y7~1         y8~1 
-#>        0.003        0.008        0.003       -0.003        0.009        0.001
+fit_sim <- mxsem(model,
+                 data = sim[,mx_model$manifestVars]) |>
+  OpenMx::mxTryHard()
+```
+
+``` r
+round(coef(fit_sim) - coef(mx_model), 3)
+#>    ind60→x2    ind60→x3 ind60→dem60 ind60→dem65           a           b 
+#>       0.003      -0.002       0.009      -0.001       0.000      -0.002 
+#>           c dem60→dem65       y1↔y1       y2↔y2       y3↔y3       y2↔y4 
+#>      -0.001       0.004       0.004       0.042       0.027       0.020 
+#>       y4↔y4       y2↔y6       y6↔y6       x1↔x1       x2↔x2       x3↔x3 
+#>      -0.001       0.012      -0.003       0.001      -0.002       0.000 
+#>       y1↔y5       y5↔y5       y3↔y7       y7↔y7       y4↔y8       y6↔y8 
+#>      -0.010      -0.012      -0.012      -0.031       0.006      -0.003 
+#>       y8↔y8 ind60↔ind60 dem60↔dem60 dem65↔dem65      one→y1      one→y2 
+#>      -0.008       0.001      -0.033      -0.009      -0.007       0.010 
+#>      one→y3      one→y4      one→y6      one→x1      one→x2      one→x3 
+#>      -0.010      -0.007       0.000      -0.001       0.001       0.000 
+#>      one→y5      one→y7      one→y8 
+#>      -0.007      -0.018      -0.008
 ```
 
 ## Central Challenge

@@ -1,5 +1,5 @@
 test_that("Political Democracy", {
-  library(lavaan)
+  library(mxsem)
   library(banSEM)
   set.seed(123)
   model <- '
@@ -20,11 +20,11 @@ test_that("Political Democracy", {
     y6 ~~ y8
 '
 
-  lavaan_model <- sem(model,
-                      data = PoliticalDemocracy,
-                      meanstructure = TRUE)
+  mx_model <- mxsem(model,
+                    data = OpenMx::Bollen) |>
+    mxTryHard()
 
-  network <- banSEM::banSEM(lavaan_model = lavaan_model)
+  network <- banSEM::banSEM(mx_model = mx_model)
 
   # plot network
   plot(network$dag)
@@ -44,10 +44,11 @@ test_that("Political Democracy", {
   # simulate data from the network and refit SEM to check if the estimates align:
   sim <- bnlearn::rbn(x = network$bayes_net, n = 100000)
 
-  fit_sim <- sem(model,
-                 data = sim[,lavaan_model@Data@ov.names[[1]]],
-                 meanstructure = TRUE)
+  fit_sim <- mxsem(model,
+                   data = sim[,mx_model$manifestVars]) |>
+    mxTryHard()
+
   testthat::expect_true(all(abs(coef(fit_sim) -
-                                  coef(lavaan_model)) / abs(coef(lavaan_model)) < .1))
+                                  coef(mx_model)) / abs(coef(mx_model)) < .1))
 
 })

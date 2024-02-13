@@ -11,7 +11,7 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
-library(lavaan)
+library(mxsem)
 library(banSEM)
 ```
 
@@ -26,7 +26,7 @@ Structural Equation Models (SEM) and Bayesian Networks are closely related. In f
 states that "the difference between the two is so minute that it is not worth the dissuasion."
 
 The objective of banSEM (**Ba**yesian **n**etwork **SEM**) is to easily transition 
-from SEM to Bayesian Networks. To this end, **banSEM** translates SEM from `lavaan` 
+from SEM to Bayesian Networks. To this end, **banSEM** translates SEM from `OpenMx` 
 to Bayesian networks in `bnlearn`.
 
 ## Installation
@@ -41,11 +41,10 @@ devtools::install_github("jhorzek/netSEM")
 
 ## Example
 
-We first estimate the SEM with lavaan. Importantly, the model **must be fitted
-with a meanstructure**!
+We first estimate the SEM with OpenMx.
 
 ```{r, message=FALSE}
-library(lavaan)
+library(mxsem)
 model <- '
   # latent variable definitions
      ind60 =~ x1 + x2 + x3
@@ -64,16 +63,16 @@ model <- '
     y6 ~~ y8
 '
 
-lavaan_model <- sem(model,
-                    data = PoliticalDemocracy,
-                    meanstructure = TRUE)
+mx_model <- mxsem(model,
+                  data = OpenMx::Bollen) |>
+  OpenMx::mxTryHard()
 ```
 
 Next, we translate the model to a Bayesian Network:
 
 ```{r, message=FALSE}
 library(banSEM)
-network <- banSEM::banSEM(lavaan_model = lavaan_model)
+network <- banSEM::banSEM(mx_model = mx_model)
 ```
 
 To get an impression of the network, you can create a plot:
@@ -115,10 +114,10 @@ and refit our SEM to check if the estimates align:
 ```{r, message=FALSE, fig.height=3}
 sim <- bnlearn::rbn(x = network$bayes_net, n = 100000)
 
-fit_sim <- sem(model,
-               data = sim[,lavaan_model@Data@ov.names[[1]]],
-               meanstructure = TRUE)
-round(coef(fit_sim) - coef(lavaan_model), 3)
+fit_sim <- mxsem(model,
+                 data = sim[,mx_model$manifestVars]) |>
+  OpenMx::mxTryHard()
+round(coef(fit_sim) - coef(mx_model), 3)
 ```
 
 ## Central Challenge 

@@ -4,52 +4,24 @@
 \alias{cov_to_phantom}
 \title{cov_to_phantom}
 \usage{
-cov_to_phantom(parameter_table, lavaan_model, phantom_free = "variance")
+cov_to_phantom(parameter_table, mx_model, phantom_free = "variance")
 }
 \arguments{
-\item{parameter_table}{parameter table of a lavaan model}
+\item{parameter_table}{parameter table of an OpenMx model (see ?OpenMx::omxLocateParameters)}
 
-\item{lavaan_model}{fitted lavaan model}
+\item{mx_model}{fitted OpenMx model}
 
 \item{phantom_free}{what to free in the phantom variables. Currently only supports "variance"}
 }
 \value{
-fitted lavaan_model with phantom variables
+fitted mx_model with phantom variables
 }
 \description{
 In Bayesian networks, all dependencies between variables must be expressed with
-directed "effects". There is no covariance in the same sense as in lavaan.
+directed "effects". There is no covariance in the same sense as in OpenMx.
 Instead, we must replace covariances with effects of a latent phantom variable.
-For instance x1 ~~ x2 is replaced with x1 =~ 1*ph; x2 =~ 1*ph; ph ~~ ph. The
-resulting model is identical to the initial lavaan model in terms of fit, but the residual
+For instance x1 <-> x2 is replaced with ph -> y1; ph -> y2; ph <-> ph. The
+resulting model is identical to the initial OpenMx model in terms of fit, but the residual
 variance estimates will change.
-}
-\examples{
-library(lavaan)
-library(banSEM)
-model <- '
-  # latent variable definitions
-     ind60 =~ x1 + x2 + x3
-     dem60 =~ y1 + a*y2 + b*y3 + c*y4
-     dem65 =~ y5 + a*y6 + b*y7 + c*y8
-
-  # regressions
-    dem60 ~ ind60
-    dem65 ~ ind60 + dem60
-
-  # residual correlations
-    y1 ~~ y5
-    y2 ~~ y4 + y6
-    y3 ~~ y7
-    y4 ~~ y8
-    y6 ~~ y8
-'
-lavaan_model <- sem(model,
-                    data = PoliticalDemocracy,
-                    meanstructure = TRUE)
-lavaan_model@ParTable |>
-  as.data.frame() |>
-  banSEM:::add_labels() |>
-  banSEM:::cov_to_phantom(lavaan_model)
 }
 \keyword{internal}

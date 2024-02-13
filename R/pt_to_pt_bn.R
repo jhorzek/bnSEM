@@ -4,14 +4,15 @@
 #' table that bnlearn understands. See https://www.bnlearn.com/examples/custom-fitted/
 #' (section "Continuous networks").
 #' @param parameter_table parameter table
+#' @param mx_model_int mxModel with replaced covariances
 #' @returns parameter table for bnlearn
 #' @keywords internal
-pt_to_pt_bn <- function(parameter_table){
+pt_to_pt_bn <- function(parameter_table,
+                        mx_model_int){
+
+  variables <- unique(c(mx_model_int$manifestVars, mx_model_int$latentVars))
 
   # we need to replace all effects with directed effects
-  variables <- unique(unlist(parameter_table[,c("lhs", "rhs")]))
-  variables <- variables[variables != ""]
-
   parameter_table_bn <- vector("list", length(variables))
   names(parameter_table_bn) <- variables
 
@@ -19,29 +20,20 @@ pt_to_pt_bn <- function(parameter_table){
     # we want to create a linear model for each of the variables
     coefs <- list()
     # extract intercepts
-    if(any((parameter_table$lhs == v) & (parameter_table$op == "~1"))){
-      coefs[["(Intercept)"]] <- parameter_table$est[parameter_table$lhs == v & parameter_table$op == "~1"]
-    }else{
-      coefs[["(Intercept)"]] <- 0.0
-    }
+    coefs[["(Intercept)"]] <- unname(mx_model_int$M$values[,v])
 
     # get all loadings and regressions for this variable
-    for(reg in which((parameter_table$lhs == v) & (parameter_table$op == "~"))){
-      coefs[[parameter_table$rhs[reg]]] <- parameter_table$est[reg]
+    vals <- mx_model_int$A$values[v, , drop = FALSE]
+    free <- mx_model_int$A$free[v, , drop = FALSE]
+    for(eff in which((vals != 0)| free)){
+      coefs[[colnames(vals)[eff]]] <- unname(vals[,eff])
     }
-    for(lam in which((parameter_table$rhs == v) & (parameter_table$op == "=~"))){
-      coefs[[parameter_table$lhs[lam]]] <- parameter_table$est[lam]
-    }
+
     pars <- list(coef = unlist(coefs))
 
     # extract residual variance
-    if(any((parameter_table$lhs == v) & (parameter_table$op == "~~") & (parameter_table$rhs == v))){
-      pars[["sd"]] <- sqrt(parameter_table$est[(parameter_table$lhs == v) &
-                                                 (parameter_table$op == "~~") &
-                                                 (parameter_table$rhs == v)])
-    }else{
-      pars[["sd"]] <- 0.0
-    }
+    pars[["sd"]] <- unname(sqrt(mx_model_int$S$values[v,v]))
+
     parameter_table_bn[[v]] <- pars
   }
 

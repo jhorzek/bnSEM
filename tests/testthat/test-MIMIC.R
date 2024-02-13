@@ -1,4 +1,5 @@
 test_that("MIMIC works", {
+  library(mxsem)
   library(lavaan)
   library(banSEM)
   model <- "
@@ -8,22 +9,18 @@ test_that("MIMIC works", {
 
   suppressWarnings(data <- lavaan::simulateData(model))
 
-  fit_lavaan <- cfa(model,
-                    data = data,
-                    missing = "ml",
-                    fixed.x = FALSE,
-                    meanstructure = TRUE)
+  fit_mx <- mxsem(model,
+                  data = data) |>
+    mxTryHard()
 
-  bn <- banSEM::banSEM(lavaan_model = fit_lavaan)
+  bn <- banSEM::banSEM(mx_model = fit_mx)
 
   # simulate data from the network and refit SEM to check if the estimates align:
   sim <- bnlearn::rbn(x = bn$bayes_net, n = 100000)
 
-  fit_sim <- sem(model,
-                 data = sim[,fit_lavaan@Data@ov.names[[1]]],
-                 missing = "ml",
-                 fixed.x = FALSE,
-                 meanstructure = TRUE)
+  fit_sim <- mxsem(model,
+                 data = sim[,fit_mx$manifestVars]) |>
+    mxTryHard()
   testthat::expect_true(all(abs(coef(fit_sim) -
-                                  coef(fit_lavaan)) < .1))
+                                  coef(fit_mx)) < .1))
 })

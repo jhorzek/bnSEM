@@ -1,10 +1,10 @@
 #' banSEM
 #'
-#' banSEM (Bayesian network SEM) translates lavaan models to Bayesian networks
-#' fitted with bnlearn. The resutling network can be used to investigate conditional
+#' banSEM (Bayesian network SEM) translates OpenMx models to Bayesian networks
+#' fitted with bnlearn. The resulting network can be used to investigate conditional
 #' distributions of the SEM.
 #'
-#' @param lavaan_model fitted lavaan model
+#' @param mx_model fitted OpenMx model of type MxRAMModel
 #' @param phantom_free what to free in the phantom variables. Currently only supports "variance"
 #' @returns list with
 #' \itemize{
@@ -12,11 +12,12 @@
 #'  \item{dag: }{The underlying directed acyclical graph}
 #'  \item{internal: }{Internal elements}
 #' }
-#' @import lavaan
+#' @import mxsem
+#' @import OpenMx
 #' @import bnlearn
 #' @export
 #' @examples
-#' library(lavaan)
+#' library(mxsem)
 #' library(banSEM)
 #' model <- '
 #'   # latent variable definitions
@@ -36,11 +37,11 @@
 #'     y6 ~~ y8
 #' '
 #'
-#' lavaan_model <- sem(model,
-#'                     data = PoliticalDemocracy,
-#'                     meanstructure = TRUE)
+#' mx_model <- mxsem(model,
+#'                   data = OpenMx::Bollen) |>
+#'   mxTryHard()
 #'
-#' network <- banSEM::banSEM(lavaan_model = lavaan_model)
+#' network <- banSEM::banSEM(mx_model = mx_model)
 #'
 #' # plot network
 #' plot(network$dag)
@@ -53,55 +54,55 @@
 #'
 #' # Get distribution under this assumption:
 #' dist <- bnlearn::cpdist(fitted = network$bayes_net,
-#'                        node = "dem65",
-#'                        evidence = (dem60 > 1))
+#'                         node = "dem65",
+#'                         evidence = (dem60 > 1))
 #' hist(dist$dem65)
 #'
 #' # simulate data from the network and refit SEM to check if the estimates align:
 #' sim <- bnlearn::rbn(x = network$bayes_net, n = 10000)
 #'
-#' fit_sim <- sem(model,
-#'                data = sim[,lavaan_model@Data@ov.names[[1]]],
-#'                meanstructure = TRUE)
+#' fit_sim <- mxsem(model,
+#'                  data = sim[,mx_model$manifestVars]) |>
+#'   mxTryHard()
 #' round(abs(coef(fit_sim) -
-#'             coef(lavaan_model)) / abs(coef(lavaan_model)), 3)
-banSEM <- function(lavaan_model,
+#'             coef(mx_model)) / abs(coef(mx_model)), 3)
+banSEM <- function(mx_model,
                    phantom_free = "variance"){
 
-  ##### Setup lavaan model & parameters ####
+  ##### Setup model & parameters ####
 
-  check_lavaan_model(lavaan_model = lavaan_model,
-                     phantom_free = phantom_free)
+  check_mx_model(mx_model = mx_model,
+                 phantom_free = phantom_free)
 
   # Extract parameter table
-  parameter_table <- lavaan_model@ParTable |>
-    as.data.frame() |>
-    add_labels()
+  parameter_table <- mx_model |>
+    OpenMx::omxLocateParameters()
 
   # We have to replace all covariances with directed effects of phantom variables
-  if(any((parameter_table$op == "~~") &
-         (parameter_table$lhs != parameter_table$rhs))){
+  if(any((parameter_table$matrix == "S") &
+         (parameter_table$row != parameter_table$col))){
 
-    lavaan_model_int <- cov_to_phantom(parameter_table,
-                                       lavaan_model,
-                                       phantom_free)
+    mx_model_int <- cov_to_phantom(parameter_table,
+                                   mx_model,
+                                   phantom_free)
 
   }else{
 
-    lavaan_model_int <- lavaan_model
+    mx_model_int <- mx_model
 
   }
 
   # extract new parameter table
-  parameter_table <- lavaan_model_int@ParTable |>
-    as.data.frame()
+  parameter_table <- mx_model_int |>
+    OpenMx::omxLocateParameters()
 
-  # remove equality constraints and simplify
-  parameter_table <- parameter_table[!parameter_table$op %in% c("<", ">", "=="),]
-  parameter_table <- parameter_table[,c("lhs", "op", "rhs", "label", "est")]
+  # simplify
+  parameter_table <- parameter_table[,c("label", "matrix", "row", "col", "value")]
 
   ##### Translate to Bayesian network ####
-  parameter_table_bn <- pt_to_pt_bn(parameter_table = parameter_table)
+  parameter_table_bn <- pt_to_pt_bn(parameter_table = parameter_table,
+                                    mx_model_int = mx_model_int)
+
   bn_model <- create_bn_model(parameter_table_bn = parameter_table_bn)
 
   # create dag
@@ -113,5 +114,5 @@ banSEM <- function(lavaan_model,
   return(list(bayes_net = bn_fit,
               dag = dag,
               internal = list(parameter_table_bn = parameter_table_bn,
-                              internal_model = lavaan_model_int)))
+                              internal_model = mx_model_int)))
 }

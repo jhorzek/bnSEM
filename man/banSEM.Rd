@@ -4,10 +4,10 @@
 \alias{banSEM}
 \title{banSEM}
 \usage{
-banSEM(lavaan_model, phantom_free = "variance")
+banSEM(mx_model, phantom_free = "variance")
 }
 \arguments{
-\item{lavaan_model}{fitted lavaan model}
+\item{mx_model}{fitted OpenMx model of type MxRAMModel}
 
 \item{phantom_free}{what to free in the phantom variables. Currently only supports "variance"}
 }
@@ -20,12 +20,12 @@ list with
 }
 }
 \description{
-banSEM (Bayesian network SEM) translates lavaan models to Bayesian networks
-fitted with bnlearn. The resutling network can be used to investigate conditional
+banSEM (Bayesian network SEM) translates OpenMx models to Bayesian networks
+fitted with bnlearn. The resulting network can be used to investigate conditional
 distributions of the SEM.
 }
 \examples{
-library(lavaan)
+library(mxsem)
 library(banSEM)
 model <- '
   # latent variable definitions
@@ -45,11 +45,11 @@ model <- '
     y6 ~~ y8
 '
 
-lavaan_model <- sem(model,
-                    data = PoliticalDemocracy,
-                    meanstructure = TRUE)
+mx_model <- mxsem(model,
+                  data = OpenMx::Bollen) |>
+  mxTryHard()
 
-network <- banSEM::banSEM(lavaan_model = lavaan_model)
+network <- banSEM::banSEM(mx_model = mx_model)
 
 # plot network
 plot(network$dag)
@@ -62,16 +62,16 @@ bnlearn::cpquery(fitted = network$bayes_net,
 
 # Get distribution under this assumption:
 dist <- bnlearn::cpdist(fitted = network$bayes_net,
-                       node = "dem65",
-                       evidence = (dem60 > 1))
+                        node = "dem65",
+                        evidence = (dem60 > 1))
 hist(dist$dem65)
 
 # simulate data from the network and refit SEM to check if the estimates align:
 sim <- bnlearn::rbn(x = network$bayes_net, n = 10000)
 
-fit_sim <- sem(model,
-               data = sim[,lavaan_model@Data@ov.names[[1]]],
-               meanstructure = TRUE)
+fit_sim <- mxsem(model,
+                 data = sim[,mx_model$manifestVars]) |>
+  mxTryHard()
 round(abs(coef(fit_sim) -
-            coef(lavaan_model)) / abs(coef(lavaan_model)), 3)
+            coef(mx_model)) / abs(coef(mx_model)), 3)
 }

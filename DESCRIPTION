@@ -10,11 +10,14 @@ License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Depends: 
-    lavaan,
+    mxsem,
+    OpenMx,
     bnlearn
 Imports:
-    methods
+    methods,
+    stats
 Suggests: 
+    lavaan,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
