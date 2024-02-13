@@ -1,11 +1,11 @@
 Package: banSEM
 Type: Package
-Title: What the Package Does (Title Case)
+Title: SEM to Bayesian Networks Translation
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author: Jannik H. Orzek
+Maintainer: Jannik H. Orzek <jannik.orzek@mailbox.org>
+Description: Translates SEM fitted with OpenMx to Bayesian Networks implemented
+    in bnlearn.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
