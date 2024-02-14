@@ -13,11 +13,11 @@ check_mx_model <- function(mx_model,
     stop("mx_model must be of type MxRAMModel.")
 
   if(length(mx_model$algebras) != 0)
-    stop("banSEM does not support mxModels with algebras.")
+    stop("bnSEM does not support mxModels with algebras.")
 
   if(is.na(logLik(mx_model)))
     stop("The mx_model has a logLik of NA. Please optimize your model parameters ",
-         "(e.g., using mxFit) before passing the model to banSEM.")
+         "(e.g., using mxFit) before passing the model to bnSEM.")
 
   if(!all(c("A", "S", "F", "M") %in% names(mx_model$matrices)))
     stop("Expected OpenMx matrices to be called A, S, M, and F")

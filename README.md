@@ -1,27 +1,22 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-> **Warning**: banSEM is just a hobby project at the moment and
-> extremely experimental. There are probably already better packages out
-> there that do the same thing. The main objective of banSEM was for the
-> authors to explore Bayesian Networks.
+> **Warning**: bnSEM is just very experimental. There are probably
+> already better packages out there that do the same thing. The main
+> objective of bnSEM is to explore similarities between SEM and Bayesian
+> Networks.
 
-# banSEM
+# bnSEM
 
 Structural Equation Models (SEM) and Bayesian Networks are closely
-related. In fact, [Pearl,
-2012](http://causality.cs.ucla.edu/blog/index.php/2012/12/07/on-structural-equations-versus-causal-bayes-networks/)
-states that “the difference between the two is so minute that it is not
-worth the dissuasion.”
-
-The objective of banSEM (**Ba**yesian **n**etwork **SEM**) is to easily
-transition from SEM to Bayesian Networks. To this end, **banSEM**
-translates SEM from `OpenMx` to Bayesian networks in `bnlearn`.
+related. The objective of bnSEM (**B**yesian **N**etwork **SEM**) is to
+easily transition from SEM to Bayesian Networks. To this end, **bnSEM**
+translates SEM fitted with `OpenMx` to Bayesian Networks in `bnlearn`.
 
 ## Installation
 
-You can install the development version of banSEM from
-[GitHub](https://github.com/jhorzek/banSEM/) with:
+You can install the development version of bnSEM from
+[GitHub](https://github.com/jhorzek/bnSEM/) with:
 
 ``` r
 # install.packages("devtools")
@@ -30,7 +25,7 @@ devtools::install_github("jhorzek/netSEM")
 
 ## Example
 
-We first estimate the SEM with OpenMx.
+We first estimate the SEM with **OpenMx**.
 
 ``` r
 library(mxsem)
@@ -60,8 +55,8 @@ mx_model <- mxsem(model,
 Next, we translate the model to a Bayesian Network:
 
 ``` r
-library(banSEM)
-network <- banSEM::banSEM(mx_model = mx_model)
+library(bnSEM)
+network <- bnSEM::bnSEM(mx_model = mx_model)
 ```
 
 To get an impression of the network, you can create a plot:
@@ -77,7 +72,7 @@ qgraph::qgraph(network$dag)
 
 With our Bayesian Network, we can now investigate the conditional
 distribution of variables in our model (see
-`vignette("Example", package = "banSEM")` for a comparison to rejection
+`vignette("Example", package = "bnSEM")` for a comparison to rejection
 sampling)
 
 ``` r
@@ -86,7 +81,7 @@ sampling)
 bnlearn::cpquery(fitted = network$bayes_net,
                  event = (dem65 > 1 & dem65 < 2),
                  evidence = (dem60 > 1))
-#> [1] 0.3389719
+#> [1] 0.3500277
 
 # Get distribution under this assumption:
 dist <- bnlearn::cpdist(fitted = network$bayes_net,
@@ -122,19 +117,19 @@ fit_sim <- mxsem(model,
 ``` r
 round(coef(fit_sim) - coef(mx_model), 3)
 #>    ind60→x2    ind60→x3 ind60→dem60 ind60→dem65           a           b 
-#>       0.003      -0.002       0.009      -0.001       0.000      -0.002 
+#>       0.004       0.010      -0.008       0.002      -0.002       0.001 
 #>           c dem60→dem65       y1↔y1       y2↔y2       y3↔y3       y2↔y4 
-#>      -0.001       0.004       0.004       0.042       0.027       0.020 
+#>      -0.006      -0.001       0.015      -0.055       0.001       0.005 
 #>       y4↔y4       y2↔y6       y6↔y6       x1↔x1       x2↔x2       x3↔x3 
-#>      -0.001       0.012      -0.003       0.001      -0.002       0.000 
+#>      -0.008      -0.001       0.040       0.000       0.000       0.003 
 #>       y1↔y5       y5↔y5       y3↔y7       y7↔y7       y4↔y8       y6↔y8 
-#>      -0.010      -0.012      -0.012      -0.031       0.006      -0.003 
+#>      -0.014      -0.021      -0.006      -0.013      -0.002       0.003 
 #>       y8↔y8 ind60↔ind60 dem60↔dem60 dem65↔dem65      one→y1      one→y2 
-#>      -0.008       0.001      -0.033      -0.009      -0.007       0.010 
+#>      -0.007      -0.005       0.038       0.000       0.013       0.017 
 #>      one→y3      one→y4      one→y6      one→x1      one→x2      one→x3 
-#>      -0.010      -0.007       0.000      -0.001       0.001       0.000 
+#>       0.010       0.012       0.011       0.001       0.005       0.004 
 #>      one→y5      one→y7      one→y8 
-#>      -0.007      -0.018      -0.008
+#>       0.005       0.011       0.013
 ```
 
 ## Central Challenge
@@ -142,15 +137,9 @@ round(coef(fit_sim) - coef(mx_model), 3)
 When transitioning from SEM to Bayesian Network, a central challenge is
 the use of covariances as parameters in SEM. To translate those
 covariances to a model that can be easily used with Bayesian Networks,
-banSEM replaces covariances with direct effects of unobserved phantom
+bnSEM replaces covariances with direct effects of unobserved phantom
 variables. The approach is explained in more detail, for instance, by
 Merkle & Rosseel (2015; see p. 8).
-
-Unfortunately, the automatic translation of covariances to phantom
-variables is currently still unreliable and may result in negative
-variances. As a result, the translation to a Bayesian Network fails. If
-you encounter such issues, try to set up a model with phantom variables
-manually and pass that to banSEM.
 
 Merkle, E. C., & Rosseel, Y. (2015). blavaan: Bayesian structural
 equation models via parameter expansion. arXiv preprint

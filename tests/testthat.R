@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(banSEM)
+library(bnSEM)
 
-test_check("banSEM")
+test_check("bnSEM")

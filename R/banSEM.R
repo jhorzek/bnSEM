@@ -1,6 +1,6 @@
-#' banSEM
+#' bnSEM
 #'
-#' banSEM (Bayesian network SEM) translates OpenMx models to Bayesian networks
+#' bnSEM (Bayesian network SEM) translates OpenMx models to Bayesian networks
 #' fitted with bnlearn. The resulting network can be used to investigate conditional
 #' distributions of the SEM.
 #'
@@ -18,7 +18,7 @@
 #' @export
 #' @examples
 #' library(mxsem)
-#' library(banSEM)
+#' library(bnSEM)
 #' model <- '
 #'   # latent variable definitions
 #'      ind60 =~ x1 + x2 + x3
@@ -41,7 +41,7 @@
 #'                   data = OpenMx::Bollen) |>
 #'   mxTryHard()
 #'
-#' network <- banSEM::banSEM(mx_model = mx_model)
+#' network <- bnSEM::bnSEM(mx_model = mx_model)
 #'
 #' # plot network
 #' plot(network$dag)
@@ -66,7 +66,7 @@
 #'   mxTryHard()
 #' round(abs(coef(fit_sim) -
 #'             coef(mx_model)) / abs(coef(mx_model)), 3)
-banSEM <- function(mx_model,
+bnSEM <- function(mx_model,
                    phantom_free = "variance"){
 
   ##### Setup model & parameters ####

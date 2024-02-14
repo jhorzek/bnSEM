@@ -1,6 +1,6 @@
 test_that("Political Democracy", {
   library(mxsem)
-  library(banSEM)
+  library(bnSEM)
   set.seed(123)
   model <- '
   # latent variable definitions
@@ -24,7 +24,7 @@ test_that("Political Democracy", {
                     data = OpenMx::Bollen) |>
     mxTryHard()
 
-  network <- banSEM::banSEM(mx_model = mx_model)
+  network <- bnSEM::bnSEM(mx_model = mx_model)
 
   # plot network
   plot(network$dag)

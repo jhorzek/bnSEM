@@ -9,7 +9,7 @@ test_that("CLPM", {
 
   library(mxsem)
   library(lavaan)
-  library(banSEM)
+  library(bnSEM)
 
   set.seed(345453)
 
@@ -101,7 +101,7 @@ RI_eta2 ~~ 0*eta1_u1 + 0*eta2_u1
                   data = data) |>
     OpenMx::mxTryHard()
 
-  bn <- banSEM::banSEM(mx_model = fit_mx)
+  bn <- bnSEM::bnSEM(mx_model = fit_mx)
 
   # simulate data from the network and refit SEM to check if the estimates align:
   sim <- bnlearn::rbn(x = bn$bayes_net, n = 100000)

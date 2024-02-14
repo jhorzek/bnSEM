@@ -1,6 +1,6 @@
-Package: banSEM
+Package: bnSEM
 Type: Package
-Title: SEM to Bayesian Networks Translation
+Title: Translate SEM to Bayesian Networks
 Version: 0.1.0
 Author: Jannik H. Orzek
 Maintainer: Jannik H. Orzek <jannik.orzek@mailbox.org>

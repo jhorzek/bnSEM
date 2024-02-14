@@ -12,36 +12,32 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 library(mxsem)
-library(banSEM)
+library(bnSEM)
 ```
 
-> **Warning**: banSEM is just a hobby project at the moment and extremely experimental. 
-There are probably already better packages out there that do the same thing. The main
-objective of banSEM was for the authors to explore Bayesian Networks.
+> **Warning**: bnSEM is just very experimental. There are probably already better 
+packages out there that do the same thing. The main objective of bnSEM is to explore
+similarities between SEM and Bayesian Networks.
 
-# banSEM
+# bnSEM
 
-Structural Equation Models (SEM) and Bayesian Networks are closely related. In fact,
-[Pearl, 2012](http://causality.cs.ucla.edu/blog/index.php/2012/12/07/on-structural-equations-versus-causal-bayes-networks/)
-states that "the difference between the two is so minute that it is not worth the dissuasion."
-
-The objective of banSEM (**Ba**yesian **n**etwork **SEM**) is to easily transition 
-from SEM to Bayesian Networks. To this end, **banSEM** translates SEM from `OpenMx` 
-to Bayesian networks in `bnlearn`.
+Structural Equation Models (SEM) and Bayesian Networks are closely related. 
+The objective of bnSEM (**B**yesian **N**etwork **SEM**) is to easily transition 
+from SEM to Bayesian Networks. To this end, **bnSEM** translates SEM fitted with
+`OpenMx` to Bayesian Networks in `bnlearn`.
 
 ## Installation
 
-You can install the development version of banSEM from [GitHub](https://github.com/jhorzek/banSEM/) with:
+You can install the development version of bnSEM from [GitHub](https://github.com/jhorzek/bnSEM/) with:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("jhorzek/netSEM")
 ```
 
-
 ## Example
 
-We first estimate the SEM with OpenMx.
+We first estimate the SEM with **OpenMx**.
 
 ```{r, message=FALSE}
 library(mxsem)
@@ -71,8 +67,8 @@ mx_model <- mxsem(model,
 Next, we translate the model to a Bayesian Network:
 
 ```{r, message=FALSE}
-library(banSEM)
-network <- banSEM::banSEM(mx_model = mx_model)
+library(bnSEM)
+network <- bnSEM::bnSEM(mx_model = mx_model)
 ```
 
 To get an impression of the network, you can create a plot:
@@ -86,7 +82,7 @@ qgraph::qgraph(network$dag)
 ## Inference
 
 With our Bayesian Network, we can now investigate the conditional distribution of
-variables in our model (see `vignette("Example", package = "banSEM")` for a comparison
+variables in our model (see `vignette("Example", package = "bnSEM")` for a comparison
 to rejection sampling)
 
 ```{r, message=FALSE, fig.height=3}
@@ -124,14 +120,9 @@ round(coef(fit_sim) - coef(mx_model), 3)
 
 When transitioning from SEM to Bayesian Network, a central challenge is the 
 use of covariances as parameters in SEM. To translate those covariances to a model
-that can be easily used with Bayesian Networks, banSEM replaces covariances with
+that can be easily used with Bayesian Networks, bnSEM replaces covariances with
 direct effects of unobserved phantom variables. The approach is explained in
 more detail, for instance, by Merkle & Rosseel (2015; see p. 8).
-
-Unfortunately, the automatic translation of covariances to phantom variables is
-currently still unreliable and may result in negative variances. As a result, the 
-translation to a Bayesian Network fails. If you encounter such issues, try to set
-up a model with phantom variables manually and pass that to banSEM.
 
 Merkle, E. C., & Rosseel, Y. (2015). blavaan: Bayesian structural equation models
 via parameter expansion. arXiv preprint arXiv:1511.05604.
