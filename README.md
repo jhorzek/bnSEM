@@ -1,10 +1,9 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-> **Warning**: bnSEM is just very experimental. There are probably
-> already better packages out there that do the same thing. The main
-> objective of bnSEM is to explore similarities between SEM and Bayesian
-> Networks.
+> **Warning**: bnSEM is very experimental. There are probably already
+> better packages out there that do the same thing. The main objective
+> of bnSEM is to explore similarities between SEM and Bayesian Networks.
 
 # bnSEM
 
@@ -81,7 +80,7 @@ sampling)
 bnlearn::cpquery(fitted = network$bayes_net,
                  event = (dem65 > 1 & dem65 < 2),
                  evidence = (dem60 > 1))
-#> [1] 0.3500277
+#> [1] 0.3399166
 
 # Get distribution under this assumption:
 dist <- bnlearn::cpdist(fitted = network$bayes_net,
@@ -117,19 +116,19 @@ fit_sim <- mxsem(model,
 ``` r
 round(coef(fit_sim) - coef(mx_model), 3)
 #>    ind60→x2    ind60→x3 ind60→dem60 ind60→dem65           a           b 
-#>       0.004       0.010      -0.008       0.002      -0.002       0.001 
+#>       0.000      -0.002       0.001       0.002       0.000       0.002 
 #>           c dem60→dem65       y1↔y1       y2↔y2       y3↔y3       y2↔y4 
-#>      -0.006      -0.001       0.015      -0.055       0.001       0.005 
+#>       0.001       0.001       0.000       0.014       0.025      -0.004 
 #>       y4↔y4       y2↔y6       y6↔y6       x1↔x1       x2↔x2       x3↔x3 
-#>      -0.008      -0.001       0.040       0.000       0.000       0.003 
+#>      -0.009      -0.007       0.003       0.001       0.001      -0.001 
 #>       y1↔y5       y5↔y5       y3↔y7       y7↔y7       y4↔y8       y6↔y8 
-#>      -0.014      -0.021      -0.006      -0.013      -0.002       0.003 
+#>       0.008       0.005       0.003       0.012       0.009       0.003 
 #>       y8↔y8 ind60↔ind60 dem60↔dem60 dem65↔dem65      one→y1      one→y2 
-#>      -0.007      -0.005       0.038       0.000       0.013       0.017 
+#>       0.016      -0.002      -0.014       0.000      -0.007      -0.008 
 #>      one→y3      one→y4      one→y6      one→x1      one→x2      one→x3 
-#>       0.010       0.012       0.011       0.001       0.005       0.004 
+#>       0.010      -0.014      -0.016      -0.001      -0.004      -0.005 
 #>      one→y5      one→y7      one→y8 
-#>       0.005       0.011       0.013
+#>      -0.011      -0.008      -0.013
 ```
 
 ## Central Challenge

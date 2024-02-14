@@ -15,7 +15,7 @@ library(mxsem)
 library(bnSEM)
 ```
 
-> **Warning**: bnSEM is just very experimental. There are probably already better 
+> **Warning**: bnSEM is very experimental. There are probably already better 
 packages out there that do the same thing. The main objective of bnSEM is to explore
 similarities between SEM and Bayesian Networks.
 
