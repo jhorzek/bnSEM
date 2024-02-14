@@ -9,13 +9,15 @@
 #' @param parameter_table parameter table of an OpenMx model (see ?OpenMx::omxLocateParameters)
 #' @param mx_model fitted OpenMx model
 #' @param phantom_free what to free in the phantom variables. Currently only supports "variance"
+#' @param optimize should the substitute model in case of covariances be optimized?
 #' @returns fitted mx_model with phantom variables
 #' @importFrom methods is
 #' @importFrom stats logLik
 #' @keywords internal
 cov_to_phantom <- function(parameter_table,
                            mx_model,
-                           phantom_free = "variance"){
+                           phantom_free = "variance",
+                           optimize){
 
   mx_model_int <- mx_model
 
@@ -76,18 +78,19 @@ cov_to_phantom <- function(parameter_table,
     mx_model_int$S[parameter_table$col[i],parameter_table$row[i]]$labels[] <- ""
   }
 
-  # in case of phantom variables, we now have to refit the model
-  message("Refitting the model with phantom variables. The fit will ",
-          "be the same, but the variances of the residuals will change.")
+  if(optimize){
+    # in case of phantom variables, we now have to refit the model
+    message("Refitting the model with phantom variables. The fit will ",
+            "be the same, but the variances of the residuals will change.")
 
-  mx_model_int <- mx_model_int |>
-    mxTryHard()
+    mx_model_int <- mx_model_int |>
+      mxTryHard()
 
-  # check fit
-  if(abs(logLik(mx_model_int) - logLik(mx_model)) / logLik(mx_model)  > .01)
-    warning("Refactoring the model failed. Observed deviations in likelihood!")
-
-
+    # check fit
+    if(abs(logLik(mx_model_int) - logLik(mx_model)) / logLik(mx_model)  > .01)
+      warning("Refactoring the model failed. Observed deviations in likelihood!")
+  }else{
+    warning("The model with phantom variables has not been optimized")
+  }
   return(mx_model_int)
-
 }

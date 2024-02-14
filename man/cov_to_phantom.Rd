@@ -4,7 +4,7 @@
 \alias{cov_to_phantom}
 \title{cov_to_phantom}
 \usage{
-cov_to_phantom(parameter_table, mx_model, phantom_free = "variance")
+cov_to_phantom(parameter_table, mx_model, phantom_free = "variance", optimize)
 }
 \arguments{
 \item{parameter_table}{parameter table of an OpenMx model (see ?OpenMx::omxLocateParameters)}
@@ -12,6 +12,8 @@ cov_to_phantom(parameter_table, mx_model, phantom_free = "variance")
 \item{mx_model}{fitted OpenMx model}
 
 \item{phantom_free}{what to free in the phantom variables. Currently only supports "variance"}
+
+\item{optimize}{should the substitute model in case of covariances be optimized?}
 }
 \value{
 fitted mx_model with phantom variables

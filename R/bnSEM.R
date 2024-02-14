@@ -6,6 +6,7 @@
 #'
 #' @param mx_model fitted OpenMx model of type MxRAMModel
 #' @param phantom_free what to free in the phantom variables. Currently only supports "variance"
+#' @param optimize should the substitute model in case of covariances be optimized?
 #' @returns list with
 #' \itemize{
 #'  \item{bayes_net: }{A fitted Bayesian network of class bn.fit}
@@ -67,12 +68,14 @@
 #' round(abs(coef(fit_sim) -
 #'             coef(mx_model)) / abs(coef(mx_model)), 3)
 bnSEM <- function(mx_model,
-                   phantom_free = "variance"){
+                  phantom_free = "variance",
+                  optimize = TRUE){
 
   ##### Setup model & parameters ####
 
   check_mx_model(mx_model = mx_model,
-                 phantom_free = phantom_free)
+                 phantom_free = phantom_free,
+                 optimize = optimize)
 
   # Extract parameter table
   parameter_table <- mx_model |>
@@ -84,7 +87,8 @@ bnSEM <- function(mx_model,
 
     mx_model_int <- cov_to_phantom(parameter_table,
                                    mx_model,
-                                   phantom_free)
+                                   phantom_free,
+                                   optimize)
 
   }else{
 
@@ -111,8 +115,19 @@ bnSEM <- function(mx_model,
   bn_fit = bnlearn::custom.fit(dag,
                                dist = parameter_table_bn)
 
+  # also return an extended data set that could be used with bnlearn
+  data_set <- mx_model@data$observed[,mx_model@manifestVars] |>
+    as.data.frame()
+
+  # add variables
+  for(v in names(dag$nodes)){
+    if(!v %in% colnames(data_set))
+      data_set[[v]] <- NA_real_
+  }
+
   return(list(bayes_net = bn_fit,
               dag = dag,
               internal = list(parameter_table_bn = parameter_table_bn,
-                              internal_model = mx_model_int)))
+                              internal_model = mx_model_int,
+                              extended_data = data_set)))
 }
