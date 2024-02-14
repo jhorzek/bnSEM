@@ -48,7 +48,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">check_mx_model</span><span class="op">(</span><span class="va">mx_model</span>, <span class="va">phantom_free</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">check_mx_model</span><span class="op">(</span><span class="va">mx_model</span>, <span class="va">phantom_free</span>, <span class="va">optimize</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -59,6 +59,10 @@
 
 <dt>phantom_free</dt>
 <dd><p>what to free in the phantom variables. Currently only supports "variance"</p></dd>
+
+
+<dt>optimize</dt>
+<dd><p>should the substitute model in case of covariances be optimized?</p></dd>
 
 </dl></div>
 
