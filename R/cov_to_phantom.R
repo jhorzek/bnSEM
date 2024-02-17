@@ -41,10 +41,12 @@ cov_to_phantom <- function(parameter_table,
     # we need to add a latent phantom variable
     current_value <- parameter_table$value[i]
     # Add intercept of 0
-    new_latent <- ifelse(paste0("ph_", parameter_table$label[i]) %in% mx_model_int$latentVars,
-                         paste0("ph_", paste0(sample(x = LETTERS, size = 3), collapse = ""),
-                                "_", parameter_table$label[i]),
-                         paste0("ph_", parameter_table$label[i]))
+    ph_var <- 1
+    while(paste0("ph_", parameter_table$label[i], "_", ph_var) %in% mx_model_int$latentVars){
+      ph_var <- ph_var + 1
+    }
+    new_latent <- paste0("ph_", parameter_table$label[i], "_", ph_var)
+
     mx_model_int <- mxModel(mx_model_int,
                             latentVars = new_latent,
                             # Add intercept of 0
@@ -66,20 +68,20 @@ cov_to_phantom <- function(parameter_table,
     # Additionally, we need to specify loadings of 1 / -1 on the covarying items
     # Note: For positive covariances the loadings are all 1. For negative covariances,
     # the loadings on one item are 1 and on the other -1.
-    mx_model_int$A[parameter_table$row[i],new_latent]$values[] <- sign(current_value)*1
-    mx_model_int$A[parameter_table$row[i],new_latent]$free[] <- FALSE
+    mx_model_int$A$values[parameter_table$row[i],new_latent] <- sign(current_value)*1
+    mx_model_int$A$free[parameter_table$row[i],new_latent] <- FALSE
 
-    mx_model_int$A[parameter_table$col[i],new_latent]$values[] <- 1
-    mx_model_int$A[parameter_table$col[i],new_latent]$free[] <- FALSE
+    mx_model_int$A$values[parameter_table$col[i],new_latent] <- 1
+    mx_model_int$A$free[parameter_table$col[i],new_latent] <- FALSE
 
     # remove covariance
-    mx_model_int$S[parameter_table$row[i],parameter_table$col[i]]$values[] <- 0
-    mx_model_int$S[parameter_table$row[i],parameter_table$col[i]]$free[] <- FALSE
-    mx_model_int$S[parameter_table$row[i],parameter_table$col[i]]$labels[] <- ""
+    mx_model_int$S$values[parameter_table$row[i],parameter_table$col[i]] <- 0
+    mx_model_int$S$free[parameter_table$row[i],parameter_table$col[i]] <- FALSE
+    mx_model_int$S$labels[parameter_table$row[i],parameter_table$col[i]] <- ""
 
-    mx_model_int$S[parameter_table$col[i],parameter_table$row[i]]$values[] <- 0
-    mx_model_int$S[parameter_table$col[i],parameter_table$row[i]]$free[] <- FALSE
-    mx_model_int$S[parameter_table$col[i],parameter_table$row[i]]$labels[] <- ""
+    mx_model_int$S$values[parameter_table$col[i],parameter_table$row[i]] <- 0
+    mx_model_int$S$free[parameter_table$col[i],parameter_table$row[i]] <- FALSE
+    mx_model_int$S$labels[parameter_table$col[i],parameter_table$row[i]] <- ""
   }
 
   if(optimize){

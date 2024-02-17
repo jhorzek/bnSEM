@@ -26,21 +26,6 @@ test_that("Equality Constrained Covariances", {
 
   network <- bnSEM::bnSEM(mx_model = mx_model)
 
-  # plot network
-  qgraph::qgraph(network$dag)
-
-  # Check conditional distribution
-  # probability that dem65 in (1,2) given dem60 > 1:
-  bnlearn::cpquery(fitted = network$bayes_net,
-                   event = (dem65 > 1 & dem65 < 2),
-                   evidence = (dem60 > 1))
-
-  # Get distribution under this assumption:
-  dist <- bnlearn::cpdist(fitted = network$bayes_net,
-                          node = "dem65",
-                          evidence = (dem60 > 1))
-  hist(dist$dem65)
-
   # simulate data from the network and refit SEM to check if the estimates align:
   sim <- bnlearn::rbn(x = network$bayes_net, n = 10000)
 
