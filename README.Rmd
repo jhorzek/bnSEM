@@ -22,7 +22,7 @@ similarities between SEM and Bayesian Networks.
 # bnSEM
 
 Structural Equation Models (SEM) and Bayesian Networks are closely related. 
-The objective of bnSEM (**B**yesian **N**etwork **SEM**) is to easily transition 
+The objective of bnSEM (**B**ayesian **N**etwork **SEM**) is to easily transition 
 from SEM to Bayesian Networks. To this end, **bnSEM** translates SEM fitted with
 `OpenMx` to Bayesian Networks in `bnlearn`.
 
