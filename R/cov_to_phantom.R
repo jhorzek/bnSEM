@@ -41,18 +41,22 @@ cov_to_phantom <- function(parameter_table,
     # we need to add a latent phantom variable
     current_value <- parameter_table$value[i]
     # Add intercept of 0
+    new_latent <- ifelse(paste0("ph_", parameter_table$label[i]) %in% mx_model_int$latentVars,
+                         paste0("ph_", paste0(sample(x = LETTERS, size = 3), collapse = ""),
+                                "_", parameter_table$label[i]),
+                         paste0("ph_", parameter_table$label[i]))
     mx_model_int <- mxModel(mx_model_int,
-                            latentVars = paste0("ph_", parameter_table$label[i]),
+                            latentVars = new_latent,
                             # Add intercept of 0
                             mxPath(from = "one",
-                                   to = paste0("ph_", parameter_table$label[i]),
+                                   to = new_latent,
                                    values = 0,
                                    free = FALSE,
                                    labels = paste0("one", mxsem::unicode_directed(),
-                                                   paste0("ph_", parameter_table$label[i]))),
+                                                   new_latent)),
                             # Add a freely estimated variance
-                            mxPath(from = paste0("ph_", parameter_table$label[i]),
-                                   to = paste0("ph_", parameter_table$label[i]),
+                            mxPath(from = new_latent,
+                                   to = new_latent,
                                    arrows = 2,
                                    values = parameter_table$value[i],
                                    free = TRUE,
@@ -62,11 +66,11 @@ cov_to_phantom <- function(parameter_table,
     # Additionally, we need to specify loadings of 1 / -1 on the covarying items
     # Note: For positive covariances the loadings are all 1. For negative covariances,
     # the loadings on one item are 1 and on the other -1.
-    mx_model_int$A[parameter_table$row[i],paste0("ph_", parameter_table$label[i])]$values[] <- sign(current_value)*1
-    mx_model_int$A[parameter_table$row[i],paste0("ph_", parameter_table$label[i])]$free[] <- FALSE
+    mx_model_int$A[parameter_table$row[i],new_latent]$values[] <- sign(current_value)*1
+    mx_model_int$A[parameter_table$row[i],new_latent]$free[] <- FALSE
 
-    mx_model_int$A[parameter_table$col[i],paste0("ph_", parameter_table$label[i])]$values[] <- 1
-    mx_model_int$A[parameter_table$col[i],paste0("ph_", parameter_table$label[i])]$free[] <- FALSE
+    mx_model_int$A[parameter_table$col[i],new_latent]$values[] <- 1
+    mx_model_int$A[parameter_table$col[i],new_latent]$free[] <- FALSE
 
     # remove covariance
     mx_model_int$S[parameter_table$row[i],parameter_table$col[i]]$values[] <- 0
