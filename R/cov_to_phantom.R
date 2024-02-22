@@ -5,7 +5,8 @@
 #' Instead, we must replace covariances with effects of a latent phantom variable.
 #' For instance x1 <-> x2 is replaced with ph -> y1; ph -> y2; ph <-> ph. The
 #' resulting model is identical to the initial OpenMx model in terms of fit, but the residual
-#' variance estimates will change.
+#' variance estimates will change. The implementation has been improved by Dr.
+#' Christian Gische
 #' @param parameter_table parameter table of an OpenMx model (see ?OpenMx::omxLocateParameters)
 #' @param mx_model fitted OpenMx model
 #' @param phantom_free what to free in the phantom variables. Currently only supports "variance"
@@ -56,23 +57,22 @@ cov_to_phantom <- function(parameter_table,
                                    free = FALSE,
                                    labels = paste0("one", mxsem::unicode_directed(),
                                                    new_latent)),
-                            # Add a freely estimated variance
+                            # Add variance of 1
                             mxPath(from = new_latent,
                                    to = new_latent,
                                    arrows = 2,
-                                   values = parameter_table$value[i],
-                                   free = TRUE,
+                                   values = 1,
+                                   free = FALSE,
                                    lbound = 1e-6,
                                    labels = parameter_table$label[i]))
 
-    # Additionally, we need to specify loadings of 1 / -1 on the covarying items
-    # Note: For positive covariances the loadings are all 1. For negative covariances,
-    # the loadings on one item are 1 and on the other -1.
-    mx_model_int$A$values[parameter_table$row[i],new_latent] <- sign(current_value)*1
+    # Additionally, we need to specify loadings of  on the covarying items
+    # One loading will be constrained to 1, the other freely estimated
+    mx_model_int$A$values[parameter_table$row[i],new_latent] <- 1
     mx_model_int$A$free[parameter_table$row[i],new_latent] <- FALSE
 
     mx_model_int$A$values[parameter_table$col[i],new_latent] <- 1
-    mx_model_int$A$free[parameter_table$col[i],new_latent] <- FALSE
+    mx_model_int$A$free[parameter_table$col[i],new_latent] <- TRUE
 
     # remove covariance
     mx_model_int$S$values[parameter_table$row[i],parameter_table$col[i]] <- 0

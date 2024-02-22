@@ -24,6 +24,7 @@ directed "effects". There is no covariance in the same sense as in OpenMx.
 Instead, we must replace covariances with effects of a latent phantom variable.
 For instance x1 <-> x2 is replaced with ph -> y1; ph -> y2; ph <-> ph. The
 resulting model is identical to the initial OpenMx model in terms of fit, but the residual
-variance estimates will change.
+variance estimates will change. The implementation has been improved by Dr.
+Christian Gische
 }
 \keyword{internal}
