@@ -24,7 +24,7 @@ similarities between SEM and Bayesian Networks.
 Structural Equation Models (SEM) and Bayesian Networks are closely related. 
 The objective of bnSEM (**B**ayesian **N**etwork **SEM**) is to easily transition 
 from SEM to Bayesian Networks. To this end, **bnSEM** translates SEM fitted with
-`OpenMx` to Bayesian Networks in `bnlearn`.
+`OpenMx` (Neale et al., 2016) to Bayesian Networks in `bnlearn` (Scutari, 2009).
 
 ## Installation
 
@@ -124,5 +124,9 @@ that can be easily used with Bayesian Networks, bnSEM replaces covariances with
 direct effects of unobserved phantom variables. The approach is explained in
 more detail, for instance, by Merkle & Rosseel (2015; see p. 8).
 
-Merkle, E. C., & Rosseel, Y. (2015). blavaan: Bayesian structural equation models
+## References
+
+- **OpenMx**: Neale, M. C., Hunter, M. D., Pritikin, J. N., Zahery, M., Brick, T. R., Kirkpatrick, R. M., ... & Boker, S. M. (2016). OpenMx 2.0: Extended structural equation and statistical modeling. Psychometrika, 81, 535-549.
+- **bnlearn**; Scutari, M. (2009). Learning Bayesian networks with the bnlearn R package. arXiv preprint arXiv:0908.3817.
+- Merkle, E. C., & Rosseel, Y. (2015). blavaan: Bayesian structural equation models
 via parameter expansion. arXiv preprint arXiv:1511.05604.

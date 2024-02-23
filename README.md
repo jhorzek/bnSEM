@@ -10,7 +10,8 @@
 Structural Equation Models (SEM) and Bayesian Networks are closely
 related. The objective of bnSEM (**B**ayesian **N**etwork **SEM**) is to
 easily transition from SEM to Bayesian Networks. To this end, **bnSEM**
-translates SEM fitted with `OpenMx` to Bayesian Networks in `bnlearn`.
+translates SEM fitted with `OpenMx` (Neale et al., 2016) to Bayesian
+Networks in `bnlearn` (Scutari, 2009).
 
 ## Installation
 
@@ -80,7 +81,7 @@ sampling)
 bnlearn::cpquery(fitted = network$bayes_net,
                  event = (dem65 > 1 & dem65 < 2),
                  evidence = (dem60 > 1))
-#> [1] 0.346415
+#> [1] 0.3423984
 
 # Get distribution under this assumption:
 dist <- bnlearn::cpdist(fitted = network$bayes_net,
@@ -116,19 +117,19 @@ fit_sim <- mxsem(model,
 ``` r
 round(coef(fit_sim) - coef(mx_model), 3)
 #>    ind60→x2    ind60→x3 ind60→dem60 ind60→dem65           a           b 
-#>      -0.001       0.004       0.002       0.003      -0.003       0.000 
+#>       0.002       0.001       0.008      -0.005      -0.002       0.005 
 #>           c dem60→dem65       y1↔y1       y2↔y2       y3↔y3       y2↔y4 
-#>       0.000       0.000       0.000       0.051      -0.006       0.007 
+#>      -0.003       0.004      -0.001       0.024       0.001       0.041 
 #>       y4↔y4       y2↔y6       y6↔y6       x1↔x1       x2↔x2       x3↔x3 
-#>      -0.008       0.007      -0.004       0.000       0.001      -0.001 
+#>       0.036       0.001      -0.017       0.000      -0.002      -0.004 
 #>       y1↔y5       y5↔y5       y3↔y7       y7↔y7       y4↔y8       y6↔y8 
-#>      -0.004       0.005      -0.007       0.002      -0.004      -0.011 
+#>      -0.016      -0.016       0.010       0.009       0.006       0.002 
 #>       y8↔y8 ind60↔ind60 dem60↔dem60 dem65↔dem65      one→y1      one→y2 
-#>      -0.021      -0.001      -0.029      -0.004      -0.006       0.002 
+#>       0.014       0.003       0.013      -0.014      -0.006      -0.005 
 #>      one→y3      one→y4      one→y6      one→x1      one→x2      one→x3 
-#>      -0.013      -0.004      -0.002      -0.003      -0.004       0.000 
+#>       0.010       0.000       0.007      -0.002      -0.004       0.003 
 #>      one→y5      one→y7      one→y8 
-#>      -0.002      -0.005      -0.015
+#>       0.005       0.010       0.000
 ```
 
 ## Central Challenge
@@ -140,6 +141,14 @@ bnSEM replaces covariances with direct effects of unobserved phantom
 variables. The approach is explained in more detail, for instance, by
 Merkle & Rosseel (2015; see p. 8).
 
-Merkle, E. C., & Rosseel, Y. (2015). blavaan: Bayesian structural
-equation models via parameter expansion. arXiv preprint
-arXiv:1511.05604.
+## References
+
+- **OpenMx**: Neale, M. C., Hunter, M. D., Pritikin, J. N., Zahery, M.,
+  Brick, T. R., Kirkpatrick, R. M., … & Boker, S. M. (2016). OpenMx 2.0:
+  Extended structural equation and statistical modeling. Psychometrika,
+  81, 535-549.
+- **bnlearn**; Scutari, M. (2009). Learning Bayesian networks with the
+  bnlearn R package. arXiv preprint arXiv:0908.3817.
+- Merkle, E. C., & Rosseel, Y. (2015). blavaan: Bayesian structural
+  equation models via parameter expansion. arXiv preprint
+  arXiv:1511.05604.
