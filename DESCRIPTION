@@ -2,7 +2,8 @@ Package: bnSEM
 Type: Package
 Title: Translate SEM to Bayesian Networks
 Version: 0.1.0
-Author: Jannik H. Orzek
+Authors@R: c(person(c("Jannik", "H."), "Orzek", role = c("aut", "cre")),
+             person(c("Christian"), "Gische", role="aut"))
 Maintainer: Jannik H. Orzek <jannik.orzek@mailbox.org>
 Description: Translates SEM fitted with OpenMx to Bayesian Networks implemented
     in bnlearn.
