@@ -1,0 +1,56 @@
+---
+title: "Conditional-and-Interventional-Distribution"
+output: rmarkdown::html_vignette
+bibliography: bibliography.bib
+vignette: >
+  %\VignetteIndexEntry{Conditional-and-Interventional-Distribution}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(bnSEM)
+```
+
+Bayesian Networks allow investigating the conditional and interventional 
+distribution of network nodes. 
+
+The central difference between conditional and interventional distribution
+can be explained with a variation of the classical sprinkler-rain model [see e.g.,
+@murphy2012machine, p. 944]. Assume that R denotes rain, W is the weather report,
+and S is the activation of water sprinklers. In the model, both the weather report
+and the activation of sprinklers are affected by rain:
+```{r, echo=FALSE}
+bnlearn::model2network("[R][W|R][S|R]") |>
+  plot()
+```
+
+
+- The conditional distribution $P(W = \text{rain} |S  = \text{activated})$ will tell us the probability 
+of the weather report reporting rain on a day where we observe that the sprinklers are activated. 
+Because sprinklers will typically not be activated on days where it rains, we will know that
+the weather forcast will probably also report rain.
+- The interventional distribution $P(W | do(s))$ will tell us the probability 
+of the weather report reporting rain when we activate (i.e., intervene on) the
+sprinklers. Of course, activating or deactivating the sprinkler will not have any
+effect on the weather report because the connections between both is caused by a 
+third variable.
+
+The difference between conditional and interventional distribution in SEM is discussed in
+detail by @gische2022beyond.
+
+## Model
+
+We will use a cross-lagged panel model for our example. We will assume that the
+correct model is given by
+
+
+
+# Bibliography
