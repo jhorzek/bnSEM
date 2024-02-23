@@ -65,7 +65,7 @@
 <div class="section level1">
 <div class="page-header"><h1 id="bnsem">bnSEM<a class="anchor" aria-label="anchor" href="#bnsem"></a>
 </h1></div>
-<p>Structural Equation Models (SEM) and Bayesian Networks are closely related. The objective of bnSEM (<strong>B</strong>ayesian <strong>N</strong>etwork <strong>SEM</strong>) is to easily transition from SEM to Bayesian Networks. To this end, <strong>bnSEM</strong> translates SEM fitted with <code>OpenMx</code> to Bayesian Networks in <code>bnlearn</code>.</p>
+<p>Structural Equation Models (SEM) and Bayesian Networks are closely related. The objective of bnSEM (<strong>B</strong>ayesian <strong>N</strong>etwork <strong>SEM</strong>) is to easily transition from SEM to Bayesian Networks. To this end, <strong>bnSEM</strong> translates SEM fitted with <code>OpenMx</code> (Neale et al., 2016) to Bayesian Networks in <code>bnlearn</code> (Scutari, 2009).</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -121,7 +121,7 @@
 <span><span class="fu">bnlearn</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bnlearn/man/cpquery.html" class="external-link">cpquery</a></span><span class="op">(</span>fitted <span class="op">=</span> <span class="va">network</span><span class="op">$</span><span class="va">bayes_net</span>,</span>
 <span>                 event <span class="op">=</span> <span class="op">(</span><span class="va">dem65</span> <span class="op">&gt;</span> <span class="fl">1</span> <span class="op">&amp;</span> <span class="va">dem65</span> <span class="op">&lt;</span> <span class="fl">2</span><span class="op">)</span>,</span>
 <span>                 evidence <span class="op">=</span> <span class="op">(</span><span class="va">dem60</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.346415</span></span>
+<span><span class="co">#&gt; [1] 0.3423984</span></span>
 <span></span>
 <span><span class="co"># Get distribution under this assumption:</span></span>
 <span><span class="va">dist</span> <span class="op">&lt;-</span> <span class="fu">bnlearn</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bnlearn/man/cpquery.html" class="external-link">cpdist</a></span><span class="op">(</span>fitted <span class="op">=</span> <span class="va">network</span><span class="op">$</span><span class="va">bayes_net</span>,</span>
@@ -147,25 +147,35 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit_sim</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mx_model</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    ind60→x2    ind60→x3 ind60→dem60 ind60→dem65           a           b </span></span>
-<span><span class="co">#&gt;      -0.001       0.004       0.002       0.003      -0.003       0.000 </span></span>
+<span><span class="co">#&gt;       0.002       0.001       0.008      -0.005      -0.002       0.005 </span></span>
 <span><span class="co">#&gt;           c dem60→dem65       y1↔y1       y2↔y2       y3↔y3       y2↔y4 </span></span>
-<span><span class="co">#&gt;       0.000       0.000       0.000       0.051      -0.006       0.007 </span></span>
+<span><span class="co">#&gt;      -0.003       0.004      -0.001       0.024       0.001       0.041 </span></span>
 <span><span class="co">#&gt;       y4↔y4       y2↔y6       y6↔y6       x1↔x1       x2↔x2       x3↔x3 </span></span>
-<span><span class="co">#&gt;      -0.008       0.007      -0.004       0.000       0.001      -0.001 </span></span>
+<span><span class="co">#&gt;       0.036       0.001      -0.017       0.000      -0.002      -0.004 </span></span>
 <span><span class="co">#&gt;       y1↔y5       y5↔y5       y3↔y7       y7↔y7       y4↔y8       y6↔y8 </span></span>
-<span><span class="co">#&gt;      -0.004       0.005      -0.007       0.002      -0.004      -0.011 </span></span>
+<span><span class="co">#&gt;      -0.016      -0.016       0.010       0.009       0.006       0.002 </span></span>
 <span><span class="co">#&gt;       y8↔y8 ind60↔ind60 dem60↔dem60 dem65↔dem65      one→y1      one→y2 </span></span>
-<span><span class="co">#&gt;      -0.021      -0.001      -0.029      -0.004      -0.006       0.002 </span></span>
+<span><span class="co">#&gt;       0.014       0.003       0.013      -0.014      -0.006      -0.005 </span></span>
 <span><span class="co">#&gt;      one→y3      one→y4      one→y6      one→x1      one→x2      one→x3 </span></span>
-<span><span class="co">#&gt;      -0.013      -0.004      -0.002      -0.003      -0.004       0.000 </span></span>
+<span><span class="co">#&gt;       0.010       0.000       0.007      -0.002      -0.004       0.003 </span></span>
 <span><span class="co">#&gt;      one→y5      one→y7      one→y8 </span></span>
-<span><span class="co">#&gt;      -0.002      -0.005      -0.015</span></span></code></pre></div>
+<span><span class="co">#&gt;       0.005       0.010       0.000</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="central-challenge">Central Challenge<a class="anchor" aria-label="anchor" href="#central-challenge"></a>
 </h2>
 <p>When transitioning from SEM to Bayesian Network, a central challenge is the use of covariances as parameters in SEM. To translate those covariances to a model that can be easily used with Bayesian Networks, bnSEM replaces covariances with direct effects of unobserved phantom variables. The approach is explained in more detail, for instance, by Merkle &amp; Rosseel (2015; see p. 8).</p>
-<p>Merkle, E. C., &amp; Rosseel, Y. (2015). blavaan: Bayesian structural equation models via parameter expansion. arXiv preprint arXiv:1511.05604.</p>
+</div>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<ul>
+<li>
+<strong>OpenMx</strong>: Neale, M. C., Hunter, M. D., Pritikin, J. N., Zahery, M., Brick, T. R., Kirkpatrick, R. M., … &amp; Boker, S. M. (2016). OpenMx 2.0: Extended structural equation and statistical modeling. Psychometrika, 81, 535-549.</li>
+<li>
+<strong>bnlearn</strong>; Scutari, M. (2009). Learning Bayesian networks with the bnlearn R package. arXiv preprint arXiv:0908.3817.</li>
+<li>Merkle, E. C., &amp; Rosseel, Y. (2015). blavaan: Bayesian structural equation models via parameter expansion. arXiv preprint arXiv:1511.05604.</li>
+</ul>
 </div>
 </div>
 
@@ -188,7 +198,8 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Jannik H. Orzek <br><small class="roles"> Maintainer </small>  </li>
+<li>Jannik H. Orzek <br><small class="roles"> Author, maintainer, copyright holder </small> <a href="https://orcid.org/0000-0002-3123-2248" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Christian Gische <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-7372-2894" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 </ul>
 </div>
 
@@ -200,7 +211,7 @@
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Jannik H. Orzek.</p>
+<p>Developed by Jannik H. Orzek, Christian Gische.</p>
 </div>
 
 <div class="pkgdown-footer-right">
