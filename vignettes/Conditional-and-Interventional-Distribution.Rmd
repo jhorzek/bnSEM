@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, message=FALSE}
 library(bnSEM)
 ```
 
@@ -23,113 +23,132 @@ Bayesian Networks allow investigating the conditional and interventional
 distribution of network nodes. 
 
 The central difference between conditional and interventional distribution
-can be explained with a variation of the classical sprinkler-rain model [see e.g.,
-@murphy2012machine, p. 944]. Assume that R denotes rain, W is the weather report,
-and S is the activation of water sprinklers. In the model, both the weather report
-and the activation of sprinklers are affected by rain:
+can be explained with the classical sprinkler-rain model [see e.g.,
+@murphy2012machine, p. 944]. However, because it is a German tradition to explain
+everything with cars, we will use a variation thereof. Let's assume we 
+are interested in the relations between Rain (R), hydroplaning (H) and windscreen
+wipers (W). Rain causes both hydroplaning and the activation of windscreen wipers:
 
 ```{r, echo=FALSE}
-par(oma = rep(0, 4), mar = rep(0, 4), mai = rep(0, 4),
-  plt = c(0.06, 0.94, 0.12, 0.88))
-bnlearn::model2network("[R][W|R][S|R]") |>
+par(mar = rep(0, 4))
+bnlearn::model2network("[R][W|R][H|R]") |>
   plot()
 ```
 
+Now, knowing that the windscreen wipers are activated, it is a fairly likely that
+it rains and therefore the likelihood of hydroplaning is also higher. This is 
+expressed by the *conditional distribution* $P(R = \text{TRUE} | W  = \text{TRUE})$.
 
+Of course, activating or deactivating the windscreen wipers (i.e., intervening
+on the windscreen wipers) will not cause the weather to change, nor will it cause
+hydroplaning. This is expressed in the *interventional distribution* 
+$P(R = \text{TRUE} | do(W = \text{TRUE}))$.
 
-- The conditional distribution $P(W = \text{rain} |S  = \text{activated})$ will tell us the probability 
-of the weather report reporting rain on a day where we observe that the sprinklers are activated. 
-Because sprinklers will typically not be activated on days where it rains, we will know that
-the weather forecast will probably also report rain.
-- The interventional distribution $P(W | do(s))$ will tell us the probability 
-of the weather report reporting rain when we activate (i.e., intervene on) the
-sprinklers. Of course, activating or deactivating the sprinkler will not have any
-effect on the weather report because the connections between both is caused by a 
-third variable.
+### Specity Model in bnlearn
 
-This can be demonstrated with bnlearn [@scutari2009learning].
+Let's investigate the model above with bnlearn [@scutari2009learning].
 
 ```{r}
 # the following code is adapted from https://www.bnlearn.com/examples/custom-fitted/
 library(bnlearn)
-C <- matrix(c(0.2, 0.8), 
+R <- matrix(c(0.2, 0.8), 
             ncol = 2, 
-            dimnames = list(NULL, c("Cloudy", "Not Cloudy")))
+            dimnames = list(NULL, c("TRUE", "FALSE")))
 
-R <- matrix(data = c(.7, .1,
-                     .3, .9), 
+W <- matrix(data = c(.9, .2,
+                     .1, .8), 
             nrow = 2,
             ncol = 2,
             byrow = TRUE,
-            dimnames = list(c("Rain", "No Rain"),
-                            c("Cloudy", "Not Cloudy")))
+            dimnames = list(c("TRUE", "FALSE"),
+                            c("TRUE", "FALSE")))
 
-S <- matrix(data = c(.2, .8,
-                     .8, .2), 
+H <- matrix(data = c(.8, .05,
+                     .2, .95), 
             nrow = 2,
             ncol = 2,
             byrow = TRUE,
-            dimnames = list(c("Sprinkler", "No Sprinkler"),
-                            c("Cloudy", "Not Cloudy")))
+            dimnames = list(c("TRUE", "FALSE"),
+                            c("TRUE", "FALSE")))
 
-net = model2network("[C][R|C][S|C]")
-fit = custom.fit(net, dist = list(C = C, 
-                                  R = R, 
-                                  S = S))
+net = model2network("[R][W|R][H|R]")
+fit = custom.fit(net, dist = list(R = R, 
+                                  W = W, 
+                                  H = H))
 print(fit)
 ```
 
-Let's first investigate the conditional distribution of rain given that the 
-sprinkler is on:
+### Conditional Distribution
+
+Let's first investigate the conditional probability of hydroplaning given that the windscreen  
+wipers are on. We can do so with the `cpquery` function (see `?bnlearn::cpquery`):
 
 ```{r}
 cpquery(fitted = fit, 
-        event = (R == "Rain"), 
-        evidence = (S == "Sprinkler"))
+        event = (H == "TRUE"), 
+        evidence = (W == "TRUE"),
+        n = 100000)
 ```
 
-The probability of rain given the sprinklers are on is .132. 
+Now, let's investigate the conditional probability of hydroplaning given that the windscreen  
+wipers are off:
 
 ```{r}
 cpquery(fitted = fit, 
-        event = (R == "No Rain"), 
-        evidence = (S == "Sprinkler"))
+        event = (H == "TRUE"), 
+        evidence = (W == "FALSE"),
+        n = 100000)
 ```
 
-The probability of no rain given the sprinklers are on is 0.863.
+We can see that knowing the status of the windscreen wiper allows us to also make a better
+guess of whether to expect hydroplaning.
+
+### Interventional Distribution
 
 For the interventional distribution we have to look at the so-called mutilated
 network (see `?bnlearn::mutilated`). The basic idea here is that intervening
-on the sprinkler will cut any connection of the sprinkler and its parent nodes 
-(here cloudiness).
-
+on the windscreen wiper will cut any connection of the windscreen wiper and its parent nodes 
+(here rain). First, let's look at the probability of hydroplaning given we turn the windscreen
+wipers on. In the following, note how windscreen wipers W is no longer affected
+by rain R:
 ```{r}
-mut <- mutilated(x = fit, evidence = 
-                   list("S" = "Sprinkler"))
+mut <- mutilated(x = fit,
+                 evidence = list("W" = "TRUE"))
 print(mut)
 ```
-Note how the node S is no longer affected by cloudiness. The interventional
-distribution of rain is now given by:
+
+The probability of hydroplaning given we turn the windscreen
+wipers on is given by:
 ```{r}
 cpquery(fitted = mut, 
-        event = (R == "No Rain"), 
-        evidence = (S == "Sprinkler"))
-
-cpquery(fitted = mut, 
-        event = (R == "No Rain"), 
-        evidence = (S == "Sprinkler"))
+        event = (H == "TRUE"), 
+        evidence = TRUE,
+        n = 100000)
 ```
 
-Note how the probability of rain is now unaffected by the status of the 
-sprinkler (small differences between the probabilities are due to the sampling 
-procedure used with cpquery).
+Now, let's look at the probability of hydroplaning given we turn the windscreen
+wipers off:
+```{r}
+mut <- mutilated(x = fit,
+                 evidence = list("W" = "FALSE"))
+print(mut)
+
+cpquery(fitted = mut, 
+        event = (H == "TRUE"), 
+        evidence = TRUE,
+        n = 100000)
+```
+
+Note how the probability of hydroplaning is no longer predicted by the windscreen
+wiper status. This is because we cut the link to the parent node - rain R - by
+intervening on the windscreen wiper.
 
 ## Structural Equation Models
 
 The difference between conditional and interventional distribution in SEM is discussed in
 detail by @gische2022beyond.
 
-To apply the ideas outlines above to an SEM, we will use a the Political Democracy
+To apply the ideas outlined above to an SEM, we will use a the Political Democracy
 model fitted with OpenMx [@neale2016openmx]. The model is given by:
 
 ```{r, message = FALSE}
@@ -159,7 +178,6 @@ mx_model <- mxsem(model,
 
 First, we translate the model to a Bayesian network:
 ```{r, message = FALSE}
-library(bnSEM)
 network <- bnSEM::bnSEM(mx_model = mx_model)
 ```
 
@@ -173,7 +191,9 @@ cond_dist <- bnlearn::cpdist(fitted = network$bayes_net,
                              method = "lw")
 # Using likelihood weighting, we have to take the weights into account when
 # computing the expected value and the variance
+# mean
 (m <- sum(cond_dist$dem65 * attr(cond_dist, "weights")) / sum(attr(cond_dist, "weights")))
+# variance
 sum(attr(cond_dist, "weights") * (cond_dist$dem65 - m)^2)/ 
   sum(attr(cond_dist, "weights"))
 ```
@@ -186,7 +206,9 @@ inter_dist <- cpdist(fitted = mut,
                      nodes = "dem65",
                      evidence = TRUE,
                      method = "lw")
+# mean
 (m <- sum(inter_dist$dem65 * attr(inter_dist, "weights")) / sum(attr(inter_dist, "weights")))
+# variance
 sum(attr(inter_dist, "weights") * (inter_dist$dem65 - m)^2)/ 
   sum(attr(inter_dist, "weights"))
 ```
@@ -200,23 +222,23 @@ dist <- bnlearn::cpdist(fitted = network$bayes_net,
                         nodes = "x1", 
                         evidence = TRUE, 
                         method = "lw")
-# Using likelihood weighting, we have to take the weights into account when
-# computing the expected value and the variance
+# mean
 (m <- sum(dist$x1 * attr(dist, "weights")) / sum(attr(dist, "weights")))
+# variance
 sum(attr(dist, "weights") * (dist$x1 - m)^2)/ 
   sum(attr(dist, "weights"))
 ```
 
-Now, let's check what the conditional mean and variance of x1 are given that
+Now, let's check the conditional mean and variance of x1 are given that
 dem60 = 3
 ```{r}
 cond_dist <- bnlearn::cpdist(fitted = network$bayes_net, 
                              nodes = "x1", 
                              evidence = list("dem60" = 3), 
                              method = "lw")
-# Using likelihood weighting, we have to take the weights into account when
-# computing the expected value and the variance
+# mean
 (m <- sum(cond_dist$x1 * attr(cond_dist, "weights")) / sum(attr(cond_dist, "weights")))
+# variance
 sum(attr(cond_dist, "weights") * (cond_dist$x1 - m)^2)/ 
   sum(attr(cond_dist, "weights"))
 ```
@@ -231,7 +253,9 @@ inter_dist <- cpdist(fitted = mut,
                      nodes = "x1",
                      evidence = TRUE,
                      method = "lw")
+# mean
 (m <- sum(inter_dist$x1 * attr(inter_dist, "weights")) / sum(attr(inter_dist, "weights")))
+# variance
 sum(attr(inter_dist, "weights") * (inter_dist$x1 - m)^2)/ 
   sum(attr(inter_dist, "weights"))
 ```
