@@ -19,7 +19,7 @@ You can install the development version of bnSEM from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("jhorzek/netSEM")
+devtools::install_github("jhorzek/bnSEM")
 ```
 
 ## Example
@@ -71,8 +71,8 @@ qgraph::qgraph(network$dag)
 
 With our Bayesian Network, we can now investigate the conditional
 distribution of variables in our model (see
-`vignette("Example", package = "bnSEM")` for a comparison to rejection
-sampling)
+`vignette("Inference-Example", package = "bnSEM")` for a comparison to
+rejection sampling)
 
 ``` r
 # Check conditional distribution
@@ -80,7 +80,7 @@ sampling)
 bnlearn::cpquery(fitted = network$bayes_net,
                  event = (dem65 > 1 & dem65 < 2),
                  evidence = (dem60 > 1))
-#> [1] 0.346415
+#> [1] 0.3442592
 
 # Get distribution under this assumption:
 dist <- bnlearn::cpdist(fitted = network$bayes_net,
@@ -116,19 +116,19 @@ fit_sim <- mxsem(model,
 ``` r
 round(coef(fit_sim) - coef(mx_model), 3)
 #>    ind60→x2    ind60→x3 ind60→dem60 ind60→dem65           a           b 
-#>      -0.001       0.004       0.002       0.003      -0.003       0.000 
+#>     -50.396     -42.899     -38.483     -14.113      -0.035      -0.026 
 #>           c dem60→dem65       y1↔y1       y2↔y2       y3↔y3       y2↔y4 
-#>       0.000       0.000       0.000       0.051      -0.006       0.007 
+#>      -0.037       0.025       0.021      -0.547       0.029      -0.317 
 #>       y4↔y4       y2↔y6       y6↔y6       x1↔x1       x2↔x2       x3↔x3 
-#>      -0.008       0.007      -0.004       0.000       0.001      -0.001 
+#>      -0.250      -0.016      -0.002       0.480       0.059      -0.065 
 #>       y1↔y5       y5↔y5       y3↔y7       y7↔y7       y4↔y8       y6↔y8 
-#>      -0.004       0.005      -0.007       0.002      -0.004      -0.011 
+#>       0.000       0.003       0.040      -0.020       0.014      -0.017 
 #>       y8↔y8 ind60↔ind60 dem60↔dem60 dem65↔dem65      one→y1      one→y2 
-#>      -0.021      -0.001      -0.029      -0.004      -0.006       0.002 
+#>      -0.050      -0.448       0.006      -0.009      -0.025       0.005 
 #>      one→y3      one→y4      one→y6      one→x1      one→x2      one→x3 
-#>      -0.013      -0.004      -0.002      -0.003      -0.004       0.000 
+#>      -0.011      -0.003      -0.015      -0.006      -0.009      -0.010 
 #>      one→y5      one→y7      one→y8 
-#>      -0.002      -0.005      -0.015
+#>      -0.001      -0.020      -0.009
 ```
 
 ## Central Challenge
