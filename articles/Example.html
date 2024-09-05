@@ -5,55 +5,47 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="bnSEM">
 <title>Example • bnSEM</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Example">
-<meta property="og:description" content="bnSEM">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Example">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">bnSEM</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/Example.html">Example</a>
-    <a class="dropdown-item" href="../articles/Factor-Scores.html">Factor-Scores</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/Example.html">Example</a></li>
+    <li><a class="dropdown-item" href="../articles/Factor-Scores.html">Factor-Scores</a></li>
+  </ul>
 </li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav"></ul>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+      </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-article">
 
@@ -62,10 +54,11 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>Example</h1>
+
+      <h1>Example</h1>
             
       
-      
+
       <div class="d-none name"><code>Example.Rmd</code></div>
     </div>
 
@@ -79,9 +72,11 @@
 provided by the Bayesian Network translation of bnSEM and a rejection
 sampling approach.</p>
 <p>The objective is to investigate the distribution of a latent variable
-<span class="math inline">\(\eta\)</span> given different values of one
-of the indicators (<span class="math inline">\(x_2\)</span>) of a second
-latent variable <span class="math inline">\(\xi\)</span>.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math>
+given different values of one of the indicators
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mn>2</mn></msub><annotation encoding="application/x-tex">x_2</annotation></semantics></math>)
+of a second latent variable
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ξ</mi><annotation encoding="application/x-tex">\xi</annotation></semantics></math>.</p>
 <p>We want to fit the following model</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="st">' </span></span>
@@ -113,9 +108,12 @@ latent variable <span class="math inline">\(\xi\)</span>.</p>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">data_set</span> <span class="op">&lt;-</span> <span class="fu">simulate_data</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
-<p>First, let’s use bnSEM to find the distribution of <span class="math inline">\(\eta\)</span> for <span class="math inline">\(x_2
-\in (-2, -1)\)</span> and <span class="math inline">\(x_2 \in
-(1,3)\)</span>:</p>
+<p>First, let’s use bnSEM to find the distribution of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math>
+for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>2</mn></msub><mo>∈</mo><mrow><mo stretchy="true" form="prefix">(</mo><mo>−</mo><mn>2</mn><mo>,</mo><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">x_2 \in (-2, -1)</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>2</mn></msub><mo>∈</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">x_2 \in (1,3)</annotation></semantics></math>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Now, we check if we can get the same distributions using a Bayesian Network:</span></span>
 <span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://jhorzek.github.io/mxsem/reference/mxsem.html" class="external-link">mxsem</a></span><span class="op">(</span><span class="va">model</span>, </span>
@@ -127,13 +125,13 @@ latent variable <span class="math inline">\(\xi\)</span>.</p>
 <span><span class="co">#&gt; Beginning initial fit attempt</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  587.039224234471</span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  587.039224234466</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Solution found</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Solution found!  Final fit=587.03922 (started at 2370.7554)  (1 attempt(s): 1 valid, 0 errors)</span></span>
 <span><span class="co">#&gt;  Start values from best fit:</span></span>
-<span><span class="co">#&gt; 0.589573290555117,0.437456172072887,0.362483573770921,0.708754542588195,0.484343201586091,0.130695875674691,0.00219273017472668,0.0749159645356098,0.0839271096789012,0.0575835947628646,0.0323845138414323,0.04639986379309,0.848887526301548,0.921461057886406,0.120593822341432,0.0831612131661281,0.0608360146295734,-0.101313313052696,-0.0287944132038738,-0.0169745642084576</span></span>
+<span><span class="co">#&gt; 0.589573286802614,0.437456169514663,0.362483574591389,0.708754542403026,0.484343201581316,0.130695876273599,0.0021927266893,0.0749159654628499,0.0839271106659758,0.0575835941856134,0.0323845141883428,0.0463998634846397,0.848887528013291,0.921461061818279,0.120593824467769,0.0831612147124639,0.0608360164067633,-0.101313312838049,-0.0287944133865385,-0.0169745605251082</span></span>
 <span></span>
 <span><span class="va">network</span> <span class="op">&lt;-</span> <span class="fu">bnSEM</span><span class="fu">::</span><span class="fu"><a href="../reference/bnSEM.html">bnSEM</a></span><span class="op">(</span>mx_model <span class="op">=</span> <span class="va">fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Found covariances in your model. The model will be translated to an equivalent model with phantom variables. The model with phantom variables will be returned in the internal list as 'internal_model'</span></span>
@@ -143,58 +141,64 @@ latent variable <span class="math inline">\(\xi\)</span>.</p>
 <span><span class="co">#&gt; Beginning initial fit attempt</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  742.734780369067</span></span>
-<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.9733560193, 40269.1961321093, 32109.0773640613, 6796.62839898369, 5836.58557958508, 5202.16184516381, 4993.33868824371, 4425.60919586387, 4076.57009759107, 2258.22447371091, 379.451761730679, 352.267885381272, 309.292943593676, 174.145158003618, 117.675381308244, 102.667856290201, 94.1619152844779, 73.708743587469, 15.915632168701, -36.3358472732335</span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  742.734780369524</span></span>
+<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.930454552, 40269.130715099, 32109.0186253948, 6796.63924203698, 5836.58307411923, 5202.15955912569, 4993.3427037226, 4425.60824792096, 4076.56664284898, 2258.22121793599, 379.457990291541, 352.269873747029, 309.299175965027, 174.149436370388, 117.673886242567, 102.677281910879, 94.1649014688631, 73.7073246880804, 15.9190169663636, -36.332165549068</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 1 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  742.734780369065</span></span>
-<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.9614174681, 40269.1891485446, 32109.084476631, 6796.63596093914, 5836.58684368997, 5202.16124044672, 4993.34024881725, 4425.61259843929, 4076.57063211407, 2258.2296395619, 379.460377936663, 352.272866795462, 309.305469980302, 174.149587385322, 117.674984812766, 102.682898371674, 94.1685611746402, 73.70661050229, 15.9313179589848, -36.3230375185558</span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  742.734780369321</span></span>
+<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41113.0534722681, 40269.2434736289, 32109.1234274267, 6796.63843605677, 5836.58580187134, 5202.162100908, 4993.34435997231, 4425.61222880317, 4076.57109552606, 2258.22977651583, 379.451911527131, 352.266762504831, 309.298350561771, 174.148697820229, 117.673372648503, 102.67273972095, 94.1634666734776, 73.711531184665, 15.9256658901365, -36.3305688334175</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 2 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
-<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.9614174681, 40269.1891485446, 32109.084476631, 6796.63596093914, 5836.58684368997, 5202.16124044672, 4993.34024881725, 4425.61259843929, 4076.57063211407, 2258.2296395619, 379.460377936663, 352.272866795462, 309.305469980302, 174.149587385322, 117.674984812766, 102.682898371674, 94.1685611746402, 73.70661050229, 15.9313179589848, -36.3230375185558</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  742.734780369091</span></span>
+<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.9638445744, 40269.1914767265, 32109.0930398301, 6796.64782667268, 5836.58869948791, 5202.16053304776, 4993.35724048879, 4425.62422957008, 4076.5681227248, 2258.2276256398, 379.469096082505, 352.272110850148, 309.307168477844, 174.152230753342, 117.676487424007, 102.686304807795, 94.1679317566112, 73.7068863215159, 15.9317640443946, -36.311722868266</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 3 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
-<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.8772566038, 40269.2324806974, 32109.033116262, 6796.62754333504, 5836.58656143237, 5202.15632858942, 4993.34625078662, 4425.61686969712, 4076.56792352909, 2258.22378104113, 379.458835269706, 352.269595287682, 309.298041701293, 174.150315825026, 117.67487495156, 102.679425706818, 94.1670424645883, 73.7090569473476, 15.9185164364039, -36.3294086431908</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  742.734780369065</span></span>
+<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.9729134887, 40269.1967740515, 32109.0853903144, 6796.63600323833, 5836.58603588682, 5202.16174533949, 4993.35004333065, 4425.61711991286, 4076.56954993673, 2258.22853556681, 379.462108815233, 352.270497413915, 309.301777578974, 174.148145670877, 117.675238240953, 102.674612446287, 94.1656115339966, 73.7070533536157, 15.9286816198491, -36.3298511585403</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 4 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
-<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41113.0645793143, 40269.4722625391, 32109.181248833, 6796.62063471088, 5836.60101952026, 5202.16092728944, 4993.35529533889, 4425.618777496, 4076.57093775478, 2258.23209823991, 379.460420307765, 352.269583484274, 309.296263557676, 174.149550213231, 117.673800256639, 102.671608820158, 94.1635262738811, 73.7080049345729, 15.9199731808363, -36.3288263578867</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  742.734780369063</span></span>
+<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.9725131022, 40269.1886381357, 32109.0731187291, 6796.63307984269, 5836.58339706218, 5202.15948414411, 4993.34534671505, 4425.61102553783, 4076.56677134764, 2258.22796475523, 379.460008277946, 352.268934744649, 309.297419136632, 174.150377606477, 117.67359283923, 102.682221511585, 94.1670732203621, 73.7092337812546, 15.9230529137458, -36.3285151879525</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 5 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
-<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41113.1277000426, 40269.0620420514, 32109.123597293, 6796.66156328938, 5836.58064428853, 5202.16684169822, 4993.34717212552, 4425.62527508746, 4076.56471172265, 2258.23074195931, 379.461149631688, 352.270095900653, 309.300885171494, 174.149219128229, 117.674092697189, 102.682724428344, 94.1656482665194, 73.7101687325433, 15.9275551707554, -36.3217953667563</span></span>
+<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.9706609247, 40269.1824553341, 32109.081361087, 6796.63717802231, 5836.58475277375, 5202.16053525121, 4993.34453137534, 4425.62004368627, 4076.56802047022, 2258.22621846966, 379.459731295626, 352.269487704234, 309.304745074518, 174.150055363349, 117.674576582541, 102.676936522673, 94.1669861227525, 73.7095738949879, 15.926642023958, -36.3235924812394</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 6 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Fit attempt worse than current best:  6553.98030660318 vs 742.734780369065</span></span>
+<span><span class="co">#&gt;  Fit attempt worse than current best:  6656.69388150941 vs 742.734780369063</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 7 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Fit attempt worse than current best:  980.662313795943 vs 742.734780369065</span></span>
+<span><span class="co">#&gt;  Fit attempt worse than current best:  979.436315923315 vs 742.734780369063</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 8 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
-<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.9823687573, 40269.1694851723, 32109.0910835499, 6796.63843943547, 5836.58187804965, 5202.15827063252, 4993.35861269126, 4425.61117000629, 4076.56616852472, 2258.22890657926, 379.458755913071, 352.268606144467, 309.302925775746, 174.146684910982, 117.673571852381, 102.67932814532, 94.1620825190488, 73.7096801316701, 15.9305289841861, -36.3263162088145</span></span>
+<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.9805147872, 40269.1707041845, 32109.0911725139, 6796.64096469463, 5836.5821023573, 5202.16096032305, 4993.34752747635, 4425.61003269732, 4076.56981747165, 2258.2270847031, 379.45844200638, 352.268918648746, 309.298841961787, 174.151983131578, 117.674007120462, 102.679428666595, 94.1678883454912, 73.7100152510201, 15.9207010602664, -36.3229150576543</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 9 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
-<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41113.1003626455, 40269.149512649, 32109.1099846394, 6796.67493038624, 5836.57944620243, 5202.16711115421, 4993.33316543627, 4425.61845623193, 4076.56813130858, 2258.2192434388, 379.451815491399, 352.269923231077, 309.298656548146, 174.148147157555, 117.67300430099, 102.675248270323, 94.1668234065719, 73.710574161294, 15.9208468850064, -36.3246317052941</span></span>
+<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41113.1734084939, 40269.0471522918, 32109.1073140196, 6796.70206631474, 5836.57270851447, 5202.16933209195, 4993.34103197453, 4425.61162227269, 4076.56490763376, 2258.21525355352, 379.464914394026, 352.268800305248, 309.308021639478, 174.152835416894, 117.674052776698, 102.681561820647, 94.1670266023268, 73.7102336151109, 15.9295443168258, -36.3227130157864</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 10 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
-<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.876530995, 40269.1803695652, 32109.0541757469, 6796.64477245404, 5836.5833656307, 5202.15103598663, 4993.34473885239, 4425.61927225357, 4076.57066405465, 2258.22436038683, 379.454006633133, 352.265503119325, 309.298058298249, 174.148778322075, 117.673430016245, 102.673278773982, 94.1635340743699, 73.7110194589512, 15.9260783462407, -36.3342357623597</span></span>
+<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41113.1429141629, 40269.2212090483, 32109.1724200889, 6796.65527693361, 5836.5848910754, 5202.16576713256, 4993.35447051413, 4425.62076751291, 4076.5706047969, 2258.23178899861, 379.464205191051, 352.270390583964, 309.304017340181, 174.153674583177, 117.674424788929, 102.684666339594, 94.1646527755518, 73.7093833026521, 15.9344388980401, -36.3210030673879</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Retry limit reached</span></span></code></pre>
 <pre><code><span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Retry limit reached; Best fit=742.73478 (started at 799.02923)  (11 attempt(s): 11 valid, 0 errors)</span></span>
+<span><span class="co">#&gt;  Retry limit reached; Best fit=742.73478 (started at 799.02924)  (11 attempt(s): 11 valid, 0 errors)</span></span>
 <span><span class="co">#&gt;  Start values from best fit:</span></span>
-<span><span class="co">#&gt; 0.588076140918204,0.436301160802789,0.361554250242226,0.708761611444347,0.484344798654995,0.894740487551315,0.0638932336696621,1.00000000082329e-06,1.00000000272913e-06,0.0575933067082418,0.0323790351239797,0.0464005040807397,0.851079228861922,0.921736494290554,0.120593856592736,0.0831613145592388,0.0608359892474935,-0.101313254063956,-0.0287943891568189,-0.0169742687623145</span></span>
+<span><span class="co">#&gt; 0.58807613503773,0.436301153129316,0.361554205223596,0.708761605330178,0.484344812925116,0.894740475946365,0.0638932331391474,1e-06,1e-06,0.0575933168785398,0.0323790298236592,0.0464005033612424,0.851079153279759,0.921736464665209,0.120593853479408,0.0831613259461268,0.0608359846350096,-0.101313262847449,-0.0287943950659428,-0.0169742745349516</span></span>
 <span></span>
 <span><span class="va">dist_1</span> <span class="op">&lt;-</span> <span class="fu">bnlearn</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bnlearn/man/cpquery.html" class="external-link">cpdist</a></span><span class="op">(</span>fitted <span class="op">=</span> <span class="va">network</span><span class="op">$</span><span class="va">bayes_net</span>,</span>
 <span>                          node <span class="op">=</span> <span class="st">"eta"</span>,</span>
@@ -222,7 +226,8 @@ criterion:</p>
 <span>  <span class="va">it</span> <span class="op">&lt;-</span> <span class="va">it</span><span class="op">+</span><span class="fl">1</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>Comparing bnSEM and rejection sampling, we find the following
-distributions for <span class="math inline">\(\eta\)</span>:</p>
+distributions for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Type <span class="op">=</span> <span class="st">"BN inference"</span>, </span>
 <span>                             Set <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"x2 in ("</span>, <span class="op">-</span><span class="fl">2</span>, <span class="st">", "</span>, <span class="op">-</span><span class="fl">1</span>, <span class="st">")"</span><span class="op">)</span>, </span>
@@ -253,21 +258,19 @@ distributions for <span class="math inline">\(\eta\)</span>:</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p>
-<p>Developed by Jannik H. Orzek, Christian Gische.</p>
+  <p>Developed by Jannik H. Orzek, Christian Gische.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>
