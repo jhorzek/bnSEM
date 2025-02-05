@@ -8,8 +8,8 @@
 <title>Example • bnSEM</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Example">
 </head>
 <body>
@@ -125,13 +125,13 @@ and
 <span><span class="co">#&gt; Beginning initial fit attempt</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  587.039224234466</span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  587.039224234481</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Solution found</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Solution found!  Final fit=587.03922 (started at 2370.7554)  (1 attempt(s): 1 valid, 0 errors)</span></span>
 <span><span class="co">#&gt;  Start values from best fit:</span></span>
-<span><span class="co">#&gt; 0.589573286802614,0.437456169514663,0.362483574591389,0.708754542403026,0.484343201581316,0.130695876273599,0.0021927266893,0.0749159654628499,0.0839271106659758,0.0575835941856134,0.0323845141883428,0.0463998634846397,0.848887528013291,0.921461061818279,0.120593824467769,0.0831612147124639,0.0608360164067633,-0.101313312838049,-0.0287944133865385,-0.0169745605251082</span></span>
+<span><span class="co">#&gt; 0.58957322846888,0.437456148851343,0.362483373166715,0.70875447376711,0.484343167810718,0.13069588666507,0.0021926799799419,0.0749159820500079,0.0839271246208961,0.0575835519258439,0.032384521260863,0.046399855919389,0.84888770062111,0.921460926590316,0.120593804111261,0.0831610913840666,0.0608359960286526,-0.101313354961244,-0.0287944446546238,-0.0169745721886592</span></span>
 <span></span>
 <span><span class="va">network</span> <span class="op">&lt;-</span> <span class="fu">bnSEM</span><span class="fu">::</span><span class="fu"><a href="../reference/bnSEM.html">bnSEM</a></span><span class="op">(</span>mx_model <span class="op">=</span> <span class="va">fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Found covariances in your model. The model will be translated to an equivalent model with phantom variables. The model with phantom variables will be returned in the internal list as 'internal_model'</span></span>
@@ -141,64 +141,64 @@ and
 <span><span class="co">#&gt; Beginning initial fit attempt</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  742.734780369524</span></span>
-<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.930454552, 40269.130715099, 32109.0186253948, 6796.63924203698, 5836.58307411923, 5202.15955912569, 4993.3427037226, 4425.60824792096, 4076.56664284898, 2258.22121793599, 379.457990291541, 352.269873747029, 309.299175965027, 174.149436370388, 117.673886242567, 102.677281910879, 94.1649014688631, 73.7073246880804, 15.9190169663636, -36.332165549068</span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  742.73478037047</span></span>
+<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.9377520141, 40269.0782593558, 32109.0137143607, 6796.63117512331, 5836.57765333058, 5202.15925358388, 4993.35481632593, 4425.61883623414, 4076.5619026187, 2258.22796494618, 379.47102712697, 352.267663760332, 309.302826636337, 174.156542862969, 117.673148251869, 102.688462682348, 94.1674813064404, 73.7109255940361, 15.9336631393673, -36.3092440491057</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 1 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  742.734780369321</span></span>
-<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41113.0534722681, 40269.2434736289, 32109.1234274267, 6796.63843605677, 5836.58580187134, 5202.162100908, 4993.34435997231, 4425.61222880317, 4076.57109552606, 2258.22977651583, 379.451911527131, 352.266762504831, 309.298350561771, 174.148697820229, 117.673372648503, 102.67273972095, 94.1634666734776, 73.711531184665, 15.9256658901365, -36.3305688334175</span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  742.734780369188</span></span>
+<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.9391251458, 40269.2434366325, 32109.0827482213, 6796.63615511915, 5836.58611319398, 5202.15724212436, 4993.34792665086, 4425.61725718766, 4076.56935229086, 2258.22752718172, 379.456949978851, 352.27122012948, 309.301054488793, 174.146979876132, 117.675452283483, 102.675313578088, 94.1648135611788, 73.7074380689364, 15.9334572512767, -36.3278808469419</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 2 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  742.734780369091</span></span>
-<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.9638445744, 40269.1914767265, 32109.0930398301, 6796.64782667268, 5836.58869948791, 5202.16053304776, 4993.35724048879, 4425.62422957008, 4076.5681227248, 2258.2276256398, 379.469096082505, 352.272110850148, 309.307168477844, 174.152230753342, 117.676487424007, 102.686304807795, 94.1679317566112, 73.7068863215159, 15.9317640443946, -36.311722868266</span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  742.734780369099</span></span>
+<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.962826288, 40269.1924586132, 32109.0859805537, 6796.63562799247, 5836.58429410825, 5202.15815898945, 4993.35396884986, 4425.62628906333, 4076.56682118898, 2258.22933329175, 379.467943510884, 352.26859048836, 309.308053393499, 174.151670474034, 117.674686279487, 102.681716721839, 94.1687135211073, 73.7095707060991, 15.9329311618466, -36.3115526706096</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 3 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Lowest minimum so far:  742.734780369065</span></span>
-<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.9729134887, 40269.1967740515, 32109.0853903144, 6796.63600323833, 5836.58603588682, 5202.16174533949, 4993.35004333065, 4425.61711991286, 4076.56954993673, 2258.22853556681, 379.462108815233, 352.270497413915, 309.301777578974, 174.148145670877, 117.675238240953, 102.674612446287, 94.1656115339966, 73.7070533536157, 15.9286816198491, -36.3298511585403</span></span>
+<span><span class="co">#&gt;  Lowest minimum so far:  742.734780369063</span></span>
+<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.9705563531, 40269.1866987349, 32109.0752251146, 6796.63265258234, 5836.58217713414, 5202.16128054996, 4993.34197335999, 4425.61921585506, 4076.5685291883, 2258.22761190819, 379.458219655846, 352.267563202534, 309.298524126581, 174.148583017495, 117.672628376517, 102.678425754875, 94.1683747586985, 73.7094026777081, 15.9259718797454, -36.3260499164841</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 4 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Lowest minimum so far:  742.734780369063</span></span>
-<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.9725131022, 40269.1886381357, 32109.0731187291, 6796.63307984269, 5836.58339706218, 5202.15948414411, 4993.34534671505, 4425.61102553783, 4076.56677134764, 2258.22796475523, 379.460008277946, 352.268934744649, 309.297419136632, 174.150377606477, 117.67359283923, 102.682221511585, 94.1670732203621, 73.7092337812546, 15.9230529137458, -36.3285151879525</span></span>
+<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.9695835807, 40269.1967248036, 32109.0896060025, 6796.64302327692, 5836.58530730099, 5202.16057128075, 4993.35850675624, 4425.62138233088, 4076.56744862467, 2258.23094338634, 379.467777434012, 352.269478428284, 309.305719196979, 174.154428379649, 117.674709085177, 102.689962628893, 94.1683624049218, 73.709271469415, 15.934528336365, -36.3194786735489</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 5 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
-<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.9706609247, 40269.1824553341, 32109.081361087, 6796.63717802231, 5836.58475277375, 5202.16053525121, 4993.34453137534, 4425.62004368627, 4076.56802047022, 2258.22621846966, 379.459731295626, 352.269487704234, 309.304745074518, 174.150055363349, 117.674576582541, 102.676936522673, 94.1669861227525, 73.7095738949879, 15.926642023958, -36.3235924812394</span></span>
+<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.968244747, 40269.1935416263, 32109.0906280246, 6796.64231823569, 5836.58332475993, 5202.15749301625, 4993.3602314906, 4425.61558173538, 4076.56716551819, 2258.23167076163, 379.466922371944, 352.268080889064, 309.30385429774, 174.153888010166, 117.673192827581, 102.683038729891, 94.166350663224, 73.7107634092516, 15.9343621006985, -36.3186004885672</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 6 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Fit attempt worse than current best:  6656.69388150941 vs 742.734780369063</span></span>
+<span><span class="co">#&gt;  Fit attempt worse than current best:  4253.96681843262 vs 742.734780369063</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 7 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Fit attempt worse than current best:  979.436315923315 vs 742.734780369063</span></span>
+<span><span class="co">#&gt;  Fit attempt worse than current best:  980.169184873152 vs 742.734780369063</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 8 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
-<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.9805147872, 40269.1707041845, 32109.0911725139, 6796.64096469463, 5836.5821023573, 5202.16096032305, 4993.34752747635, 4425.61003269732, 4076.56981747165, 2258.2270847031, 379.45844200638, 352.268918648746, 309.298841961787, 174.151983131578, 117.674007120462, 102.679428666595, 94.1678883454912, 73.7100152510201, 15.9207010602664, -36.3229150576543</span></span>
+<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.7057008402, 40269.0754669934, 32108.8959789192, 6796.60293717256, 5836.58452190003, 5202.14633486553, 4993.35034684618, 4425.60920855256, 4076.56233155198, 2258.22526593963, 379.452197863741, 352.26397270073, 309.299203702758, 174.149615105233, 117.672620782477, 102.676204509343, 94.1639198823064, 73.7113658590918, 15.929407291551, -36.3228231985798</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 9 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
-<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41113.1734084939, 40269.0471522918, 32109.1073140196, 6796.70206631474, 5836.57270851447, 5202.16933209195, 4993.34103197453, 4425.61162227269, 4076.56490763376, 2258.21525355352, 379.464914394026, 352.268800305248, 309.308021639478, 174.152835416894, 117.674052776698, 102.681561820647, 94.1670266023268, 73.7102336151109, 15.9295443168258, -36.3227130157864</span></span>
+<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41113.0938670642, 40269.1501568005, 32109.123372667, 6796.67861821802, 5836.57871869194, 5202.16280266464, 4993.33774758161, 4425.62777299009, 4076.56667299316, 2258.21837752492, 379.453867548606, 352.269488668362, 309.297883221068, 174.146611712716, 117.672515659601, 102.678680520653, 94.1662523268488, 73.7108000230034, 15.9293172051523, -36.3261434647813</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Beginning fit attempt 10 of at maximum 10 extra tries</span></span>
 <span><span class="co">#&gt; Running untitled1 with 20 parameters</span></span>
-<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41113.1429141629, 40269.2212090483, 32109.1724200889, 6796.65527693361, 5836.5848910754, 5202.16576713256, 4993.35447051413, 4425.62076751291, 4076.5706047969, 2258.23178899861, 379.464205191051, 352.270390583964, 309.304017340181, 174.153674583177, 117.674424788929, 102.684666339594, 94.1646527755518, 73.7093833026521, 15.9344388980401, -36.3210030673879</span></span>
+<span><span class="co">#&gt;  Not all eigenvalues of the Hessian are positive: 41112.9809613624, 40269.1643182148, 32109.082373482, 6796.62987432085, 5836.58336062199, 5202.15985124533, 4993.35037253669, 4425.61288259509, 4076.56729231003, 2258.22617776876, 379.458689971186, 352.271688640321, 309.299589136578, 174.148618984088, 117.676289815838, 102.677904620618, 94.1630929620473, 73.7079208453874, 15.9249469153145, -36.321686332198</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Retry limit reached</span></span></code></pre>
 <pre><code><span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Retry limit reached; Best fit=742.73478 (started at 799.02924)  (11 attempt(s): 11 valid, 0 errors)</span></span>
 <span><span class="co">#&gt;  Start values from best fit:</span></span>
-<span><span class="co">#&gt; 0.58807613503773,0.436301153129316,0.361554205223596,0.708761605330178,0.484344812925116,0.894740475946365,0.0638932331391474,1e-06,1e-06,0.0575933168785398,0.0323790298236592,0.0464005033612424,0.851079153279759,0.921736464665209,0.120593853479408,0.0831613259461268,0.0608359846350096,-0.101313262847449,-0.0287943950659428,-0.0169742745349516</span></span>
+<span><span class="co">#&gt; 0.588076132810366,0.43630114683821,0.361554214286269,0.708761605654486,0.484344814634398,0.894740481043832,0.0638932309403106,1.00000000000002e-06,1.00000000000006e-06,0.0575933174948648,0.0323790310884088,0.0464005033060238,0.85107914921548,0.921736487725876,0.120593854347161,0.0831613247045892,0.060835982639293,-0.101313264335251,-0.0287943954374778,-0.0169742745433154</span></span>
 <span></span>
 <span><span class="va">dist_1</span> <span class="op">&lt;-</span> <span class="fu">bnlearn</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bnlearn/man/cpquery.html" class="external-link">cpdist</a></span><span class="op">(</span>fitted <span class="op">=</span> <span class="va">network</span><span class="op">$</span><span class="va">bayes_net</span>,</span>
 <span>                          node <span class="op">=</span> <span class="st">"eta"</span>,</span>
@@ -262,7 +262,7 @@ distributions for
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>
