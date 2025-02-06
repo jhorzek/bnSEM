@@ -6,13 +6,12 @@
 #'
 #' @param mx_model fitted OpenMx model of type MxRAMModel
 #' @param phantom_free what to free in the phantom variables. Currently only supports "variance"
-#' @param optimize should the substitute model in case of covariances be optimized?
+#' @param optimize should the substitute model in case of covariances be optimized? If
+#' the model is not optimized, the Bayesian Network may deviate from the SEM.
 #' @returns list with
-#' \itemize{
 #'  \item{bayes_net: }{A fitted Bayesian network of class bn.fit}
 #'  \item{dag: }{The underlying directed acyclical graph}
 #'  \item{internal: }{Internal elements}
-#' }
 #' @import mxsem
 #' @import OpenMx
 #' @import bnlearn

@@ -105,6 +105,59 @@ dist <- bnlearn::cpdist(fitted = network$bayes_net,
 hist(dist$dem65)
 ```
 
+Additionally, we can investigate interventional distributions. This is fairly experimental
+and has not really been tested - so take everything in the following with a large 
+grain of salt.
+
+In bnlearn, the interventional distribution can be investigated using mutilated
+networks. For example, let's assume we intervene on the latent `dem60` variable by
+setting its value to 2:
+```{r}
+mut <- mutilated(x = network$bayes_net, 
+                 evidence = list("dem60" = 2))
+```
+
+We can then investigate the distribution of the dependent variable `dem65`
+
+```{r}
+inter_dist <- cpdist(fitted = mut,
+                     nodes = "dem65",
+                     evidence = TRUE,
+                     method = "lw")
+# mean
+(m <- sum(inter_dist$dem65 * attr(inter_dist, "weights")) / sum(attr(inter_dist, "weights")))
+# variance
+sum(attr(inter_dist, "weights") * (inter_dist$dem65 - m)^2)/ 
+  sum(attr(inter_dist, "weights"))
+```
+
+This is higher than the original estimates for the mean and variance of `dem65` because
+`dem60` has an effect on `dem65`:
+```{r}
+mx_model$M$values[,"dem65"]
+mx_model$S$values["dem65", "dem65"]
+```
+
+Now, let's also look at the expected value for `ind60`:
+```{r}
+inter_dist <- cpdist(fitted = mut,
+                     nodes = "ind60",
+                     evidence = TRUE,
+                     method = "lw")
+# mean
+(m <- sum(inter_dist$ind60 * attr(inter_dist, "weights")) / sum(attr(inter_dist, "weights")))
+# variance
+sum(attr(inter_dist, "weights") * (inter_dist$ind60 - m)^2)/ 
+  sum(attr(inter_dist, "weights"))
+```
+Because `dem65` has no effect on `ind60`, this is identical to the estimated mean and covariance for `ind60` in the original model:
+```{r}
+mx_model$M$values[,"ind60"]
+mx_model$S$values["ind60", "ind60"]
+```
+
+## Checking the model
+
 To check our Bayesian Network, we can also simulate data from the network 
 and refit our SEM to check if the estimates align:
 ```{r, message=FALSE, fig.height=3}

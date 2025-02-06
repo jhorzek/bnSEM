@@ -81,7 +81,7 @@ sampling)
 bnlearn::cpquery(fitted = network$bayes_net,
                  event = (dem65 > 1 & dem65 < 2),
                  evidence = (dem60 > 1))
-#> [1] 0.3423984
+#> [1] 0.3421936
 
 # Get distribution under this assumption:
 dist <- bnlearn::cpdist(fitted = network$bayes_net,
@@ -103,6 +103,76 @@ hist(dist$dem65)
 
 <img src="man/figures/README-unnamed-chunk-5-2.png" width="100%" />
 
+Additionally, we can investigate interventional distributions. This is
+fairly experimental and has not really been tested - so take everything
+in the following with a large grain of salt.
+
+In bnlearn, the interventional distribution can be investigated using
+mutilated networks. For example, let’s assume we intervene on the latent
+`dem60` variable by setting its value to 2:
+
+``` r
+mut <- mutilated(x = network$bayes_net, 
+                 evidence = list("dem60" = 2))
+```
+
+We can then investigate the distribution of the dependent variable
+`dem65`
+
+``` r
+inter_dist <- cpdist(fitted = mut,
+                     nodes = "dem65",
+                     evidence = TRUE,
+                     method = "lw")
+# mean
+(m <- sum(inter_dist$dem65 * attr(inter_dist, "weights")) / sum(attr(inter_dist, "weights")))
+#> [1] 1.732297
+# variance
+sum(attr(inter_dist, "weights") * (inter_dist$dem65 - m)^2)/ 
+  sum(attr(inter_dist, "weights"))
+#> [1] 0.329849
+```
+
+This is higher than the original estimates for the mean and variance of
+`dem65` because `dem60` has an effect on `dem65`:
+
+``` r
+mx_model$M$values[,"dem65"]
+#> dem65 
+#>     0
+mx_model$S$values["dem65", "dem65"]
+#> [1] 0.1644651
+```
+
+Now, let’s also look at the expected value for `ind60`:
+
+``` r
+inter_dist <- cpdist(fitted = mut,
+                     nodes = "ind60",
+                     evidence = TRUE,
+                     method = "lw")
+# mean
+(m <- sum(inter_dist$ind60 * attr(inter_dist, "weights")) / sum(attr(inter_dist, "weights")))
+#> [1] 0.003850771
+# variance
+sum(attr(inter_dist, "weights") * (inter_dist$ind60 - m)^2)/ 
+  sum(attr(inter_dist, "weights"))
+#> [1] 0.4522638
+```
+
+Because `dem65` has no effect on `ind60`, this is identical to the
+estimated mean and covariance for `ind60` in the original model:
+
+``` r
+mx_model$M$values[,"ind60"]
+#> ind60 
+#>     0
+mx_model$S$values["ind60", "ind60"]
+#> [1] 0.4485991
+```
+
+## Checking the model
+
 To check our Bayesian Network, we can also simulate data from the
 network and refit our SEM to check if the estimates align:
 
@@ -117,19 +187,19 @@ fit_sim <- mxsem(model,
 ``` r
 round(coef(fit_sim) - coef(mx_model), 3)
 #>    ind60→x2    ind60→x3 ind60→dem60 ind60→dem65           a           b 
-#>       0.002       0.001       0.008      -0.005      -0.002       0.005 
+#>      -0.002      -0.003      -0.014      -0.006       0.001      -0.001 
 #>           c dem60→dem65       y1↔y1       y2↔y2       y3↔y3       y2↔y4 
-#>      -0.003       0.004      -0.001       0.024       0.001       0.041 
+#>       0.003       0.000      -0.010      -0.013      -0.011      -0.004 
 #>       y4↔y4       y2↔y6       y6↔y6       x1↔x1       x2↔x2       x3↔x3 
-#>       0.036       0.001      -0.017       0.000      -0.002      -0.004 
+#>      -0.014       0.009      -0.008      -0.001       0.000       0.003 
 #>       y1↔y5       y5↔y5       y3↔y7       y7↔y7       y4↔y8       y6↔y8 
-#>      -0.016      -0.016       0.010       0.009       0.006       0.002 
+#>      -0.008      -0.005      -0.019       0.027      -0.005      -0.013 
 #>       y8↔y8 ind60↔ind60 dem60↔dem60 dem65↔dem65      one→y1      one→y2 
-#>       0.014       0.003       0.013      -0.014      -0.006      -0.005 
+#>      -0.007      -0.001       0.017      -0.004       0.005       0.005 
 #>      one→y3      one→y4      one→y6      one→x1      one→x2      one→x3 
-#>       0.010       0.000       0.007      -0.002      -0.004       0.003 
+#>       0.003       0.007       0.011       0.004       0.008       0.005 
 #>      one→y5      one→y7      one→y8 
-#>       0.005       0.010       0.000
+#>       0.008       0.013       0.014
 ```
 
 ## Central Challenge

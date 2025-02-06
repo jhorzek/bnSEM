@@ -1,7 +1,7 @@
 Package: bnSEM
 Type: Package
 Title: Translate SEM to Bayesian Networks
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(person(given   = "Jannik H.", family = "Orzek",
                     role    = c("aut", "cre", "cph"),
                     email   = "jannik.orzek@mailbox.org",
@@ -29,6 +29,6 @@ Suggests:
     testthat (>= 3.0.0),
     ggplot2
 Config/testthat/edition: 3
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 VignetteBuilder: knitr
 URL: https://jhorzek.github.io/bnSEM/

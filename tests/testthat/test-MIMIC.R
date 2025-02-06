@@ -6,6 +6,10 @@ test_that("MIMIC works", {
   sim_model <- "
   eta =~ 1*y1 + 1*y2 + 1*y3 + 1*y4
   eta ~ .3*x1 + .5*x2 + .2*x3 + .1*x4 + .1*x5
+  x1 ~~ -.1*x2 + .1*x3 + .2*x4 + .1*x5
+  x2 ~~ .1*x3 + -.1*x4 + .1*x5
+  x3 ~~ -.2*x4 + .1*x5
+  x4 ~~ .1*x5
   "
 
   suppressWarnings(data <- lavaan::simulateData(sim_model))
