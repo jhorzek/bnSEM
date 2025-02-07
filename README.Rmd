@@ -32,7 +32,7 @@ You can install the development version of bnSEM from [GitHub](https://github.co
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("jhorzek/netSEM")
+devtools::install_github("jhorzek/bnSEM")
 ```
 
 ## Example
