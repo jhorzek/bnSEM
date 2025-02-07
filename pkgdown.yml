@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   Example: Example.html
   Factor-Scores: Factor-Scores.html
-last_built: 2025-02-06T20:17Z
+last_built: 2025-02-07T17:33Z
 urls:
   reference: https://jhorzek.github.io/bnSEM/reference
   article: https://jhorzek.github.io/bnSEM/articles
