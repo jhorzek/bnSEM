@@ -22,8 +22,10 @@ distributions of the SEM."></head><body>
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Example.html">Example</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Conditional-and-Interventional-Distribution.html">Conditional-and-Interventional-Distribution</a></li>
     <li><a class="dropdown-item" href="../articles/Factor-Scores.html">Factor-Scores</a></li>
+    <li><a class="dropdown-item" href="../articles/Inference-Example.html">Inference-Example</a></li>
+    <li><a class="dropdown-item" href="../articles/Translating-SEM-to-bnlearn.html">Translating-SEM-to-bnlearn</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -48,7 +50,7 @@ distributions of the SEM.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bnSEM</span><span class="op">(</span><span class="va">mx_model</span>, phantom_free <span class="op">=</span> <span class="st">"variance"</span>, optimize <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bnSEM</span><span class="op">(</span><span class="va">mx_model</span>, optimize <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -59,28 +61,16 @@ distributions of the SEM.</p>
 <dd><p>fitted OpenMx model of type MxRAMModel</p></dd>
 
 
-<dt id="arg-phantom-free">phantom_free<a class="anchor" aria-label="anchor" href="#arg-phantom-free"></a></dt>
-<dd><p>what to free in the phantom variables. Currently only supports "variance"</p></dd>
-
-
 <dt id="arg-optimize">optimize<a class="anchor" aria-label="anchor" href="#arg-optimize"></a></dt>
-<dd><p>should the substitute model in case of covariances be optimized? If
-the model is not optimized, the Bayesian Network may deviate from the SEM.</p></dd>
+<dd><p>should the substitute model in case of covariances be optimized?</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>list with</p>
-<dl><dt>bayes_net: </dt>
-<dd><p>A fitted Bayesian network of class bn.fit</p></dd>
-
- <dt>dag: </dt>
-<dd><p>The underlying directed acyclical graph</p></dd>
-
- <dt>internal: </dt>
-<dd><p>Internal elements</p></dd>
-
-</dl></div>
+    <p>list with</p><ul><li><p>bayes_net: A fitted Bayesian network of class bn.fit</p></li>
+<li><p>dag: The underlying directed acyclical graph</p></li>
+<li><p>internal: Internal elements</p></li>
+</ul></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -129,14 +119,14 @@ the model is not optimized, the Bayesian Network may deviate from the SEM.</p></
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Beginning initial fit attempt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Running untitled1 with 39 parameters</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  Lowest minimum so far:  3097.6361580687</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  Lowest minimum so far:  3097.63615807031</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Solution found</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  Solution found!  Final fit=3097.6362 (started at 3232.4975)  (1 attempt(s): 1 valid, 0 errors)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  Solution found!  Final fit=3097.6362 (started at 3139.3789)  (1 attempt(s): 1 valid, 0 errors)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  Start values from best fit:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2.17965659507052,1.81821045429738,1.47133374798589,0.60047487111885,1.19078152359288,1.17453890611203,1.25097915374888,0.865041017670935,1.27210355808734,3.95821123842909,4.24409848300197,1.42156199408595,1.41338522557865,0.0813875699531766,0.120428543012339,0.466658166919666,1.73049978091535,2.84845587606831,1.573113161008,0.448599972340869,3.8753453962987,0.164463852854157,0.432335064735452,0.310126519899195,0.201279987144479,0.280896024610043,0.302320082198017,0.302324194143519,5.46466730432068,4.25644309401417,6.56311058231569,4.45253180119827,2.97807421655388,5.05438344418752,4.79219457775147,3.55769037091342,5.13625336080003,6.19626355746667,4.04338891428113</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2.17965668781529,1.81820958740113,1.47133053613888,0.600476520459829,1.19078206378167,1.17453995861121,1.25098127332152,0.865041383144329,1.00000098001506,1.00000276589204,0.999995095332759,1.00000099076327,0.999978174726985,0.999996893287447,1.27210409164421,3.9582155570106,4.24409226776088,1.42157134203641,1.41337816400277,0.0813878044779179,0.120428133551215,0.466659809304263,1.73050125907096,2.84846262094311,1.57309528936656,0.448598974621308,3.87532084824584,0.164463011143348,5.46465258474983,4.25642261191493,6.5630917519263,4.4525140945363,2.97805547157172,5.05438126896023,4.79218911248752,3.55768504367496,5.13623815452341,6.19624703549504,4.04337055342448</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot network</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">network</span><span class="op">$</span><span class="va">dag</span><span class="op">)</span></span></span>
@@ -167,21 +157,21 @@ the model is not optimized, the Bayesian Network may deviate from the SEM.</p></
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Beginning initial fit attempt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Running untitled2 with 39 parameters</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  Lowest minimum so far:  17485340.2145426</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  Lowest minimum so far:  17484187.6540198</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  OpenMx status code 6 not in list of acceptable status codes, (0,0)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  Not all eigenvalues of the Hessian are positive: 2811004174.11964, 1792310681.67532, 1144242730.79576, 284074598.219744, 274712244.563297, 233781783.190331, 77715651.6206562, 58166788.9532212, 57994168.7134027, 46447666.8530309, 31173443.941593, 18691333.7597623, 11862239.0336091, 5526658.59174944, 5200301.55355063, 3075763.68640595, 1781052.91207028, 1358986.61164136, 1179343.40931051, 1073906.56175999, 914536.67986121, 586713.368392844, 431556.124541997, 416063.344079415, 336220.23685349, 150764.476661562, 68162.1693437402, 45444.6179309909, 44558.0359854031, 28839.9454976098, 16385.4503895098, 13519.5670567802, 9716.57337546466, 7949.98782497588, 5201.6190171153, 4119.53870447983, -687982.985852456, -19387121.6950181, -33308626.9956739</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  Not all eigenvalues of the Hessian are positive: 2810469868.54716, 1792795847.05197, 1144478433.91078, 284057001.15646, 274699859.342902, 234034019.063359, 77711901.6185549, 58161726.5019482, 58010675.3643987, 46464444.7132084, 31186189.2482366, 18702013.0332961, 11861926.0106197, 5529378.58192065, 5198777.73831089, 3077952.93711128, 1781095.24712831, 1358391.2441052, 1178728.55843469, 1073582.46284275, 914431.810752561, 586346.422357504, 431809.737797082, 416894.748302949, 336569.444216387, 150771.202676502, 68291.7910864922, 45386.8581329202, 44428.5808243019, 28778.1756909989, 16277.9593804588, 13486.624484624, 9599.26830902301, 7910.33464241179, 5154.60659744072, 4089.62821064701, -687746.117153364, -19393852.0654035, -33305740.328856</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Beginning fit attempt 1 of at maximum 10 extra tries</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Running untitled2 with 39 parameters</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  Lowest minimum so far:  413484.974458397</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  Lowest minimum so far:  413484.867580577</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Solution found</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  Solution found!  Final fit=413484.97 (started at 30044673)  (2 attempt(s): 2 valid, 0 errors)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  Solution found!  Final fit=413484.87 (started at 30044522)  (2 attempt(s): 2 valid, 0 errors)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  Start values from best fit:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2.16900741020933,1.79872872264701,1.46533102410785,0.605492762241748,1.20428302305947,1.18692335175787,1.26081106816513,0.86912897015681,1.84960829179917,7.5308699805277,5.02590275435968,1.43639630228163,3.26881338462589,2.14509243433976,4.85365431241534,0.0805625566778534,0.131896063099659,0.452653731872997,0.619801779322291,2.39297143704953,0.64031887778172,3.47259400996301,0.332008355465567,1.30884335945208,3.30225449665907,0.459207334117843,3.82189561953536,0.177525496388601,5.45286356628746,4.22736748325042,6.57040068721782,4.44786867593861,2.93022559096522,5.05110727039029,4.78631685104557,3.56273909524017,5.11377762016402,6.16862001807675,4.00173909118111</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2.16900746556593,1.7987278308082,1.46532778108849,0.605494316657049,1.20428361958507,1.18692447942618,1.26081323845029,0.869129367799054,1.84960433741289,7.53086291969353,5.02589473705613,1.43640074565455,3.26881220768283,2.14508281881682,4.85364159368611,0.0805627839955393,0.131895674117963,0.452655366539125,0.619796609968507,2.39296713908209,0.640316624235759,3.47259814802898,0.332005503222796,1.30884067588896,3.30224372085807,0.459206330691456,3.82187113570309,0.177524437289919,5.45284896202368,4.22734715100006,6.57038195784203,4.4478513076247,2.9302069236568,5.05110510732778,4.78631141805914,3.56273380992829,5.11376248427418,6.16860352467449,4.0017206320309</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit_sim</span><span class="op">)</span> <span class="op">-</span></span></span>
 <span class="r-in"><span>            <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mx_model</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mx_model</span><span class="op">)</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    ind60→x2    ind60→x3 ind60→dem60 ind60→dem65           a           b </span>
