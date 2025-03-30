@@ -68,6 +68,7 @@
 #'             coef(mx_model)) / abs(coef(mx_model)), 3)
 bnSEM <- function(mx_model,
                   phantom_free = "variance",
+                  phantom_variance_start = 1,
                   optimize = TRUE){
 
   ##### Setup model & parameters ####
@@ -87,6 +88,7 @@ bnSEM <- function(mx_model,
     mx_model_int <- cov_to_phantom(parameter_table,
                                    mx_model,
                                    phantom_free,
+                                   phantom_variance_start,
                                    optimize)
 
   }else{

@@ -17,7 +17,8 @@
 #' @keywords internal
 cov_to_phantom <- function(parameter_table,
                            mx_model,
-                           phantom_free = "variance",
+                           phantom_free,
+                           phantom_variance_start,
                            optimize){
 
   mx_model_int <- mx_model
@@ -70,7 +71,7 @@ cov_to_phantom <- function(parameter_table,
                             mxPath(from = new_latent,
                                    to = new_latent,
                                    arrows = 2,
-                                   values = 1,
+                                   values = phantom_variance_start,
                                    free = TRUE,
                                    lbound = 1e-6,
                                    labels = parameter_table$label[i]))
