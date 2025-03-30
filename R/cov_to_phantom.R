@@ -37,6 +37,15 @@ cov_to_phantom <- function(parameter_table,
       next
 
     cov_at <- parameter_table[i,]
+
+    # get variances; these will be used for scaling the loadings of
+    # the phantom variables. The approach used in the
+    # following is based on p. 8 in Merkle, E. C., & Rosseel,
+    # Y. (2015). blavaan: Bayesian structural equation models via
+    # parameter expansion. arXiv preprint arXiv:1511.05604.
+    var_ii <- mx_model$S$values[cov_at$row, cov_at$row]
+    var_jj <- mx_model$S$values[cov_at$col, cov_at$col]
+
     # we need to add a latent phantom variable
     current_value <- parameter_table$value[i]
     # Add intercept of 0
@@ -70,13 +79,13 @@ cov_to_phantom <- function(parameter_table,
                                    lbound = 1e-6,
                                    labels = parameter_table$label[i]))
 
-    # Additionally, we need to specify loadings of  on the covarying items
+    # Additionally, we need to specify loadings on the covarying items
     # One loading will be constrained to 1, the other freely estimated
-    mx_model_int$A$values[parameter_table$row[i],new_latent] <- 1
+    mx_model_int$A$values[parameter_table$row[i],new_latent] <- sqrt(abs(current_value) * var_ii)
     mx_model_int$A$free[parameter_table$row[i],new_latent] <- FALSE
 
-    mx_model_int$A$values[parameter_table$col[i],new_latent] <- 1
-    mx_model_int$A$free[parameter_table$col[i],new_latent] <- TRUE
+    mx_model_int$A$values[parameter_table$col[i],new_latent] <- sign(current_value)*sqrt(abs(current_value) * var_ii)
+    mx_model_int$A$free[parameter_table$col[i],new_latent] <- FALSE
 
     # remove covariance
     mx_model_int$S$values[parameter_table$row[i],parameter_table$col[i]] <- 0
@@ -97,7 +106,7 @@ cov_to_phantom <- function(parameter_table,
       mxTryHard()
 
     # check fit
-    if(abs(logLik(mx_model_int) - logLik(mx_model)) / logLik(mx_model)  > .01)
+    if(abs(logLik(mx_model_int) - logLik(mx_model)) / abs(logLik(mx_model))  > .01)
       warning("Refactoring the model failed. Observed deviations in likelihood!")
   }else{
     warning("The model with phantom variables has not been optimized")
