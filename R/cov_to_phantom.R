@@ -81,11 +81,11 @@ cov_to_phantom <- function(parameter_table,
 
     # Additionally, we need to specify loadings on the covarying items
     # One loading will be constrained to 1, the other freely estimated
-    mx_model_int$A$values[parameter_table$row[i],new_latent] <- sqrt(abs(current_value) * var_ii)
+    mx_model_int$A$values[parameter_table$row[i],new_latent] <- 1
     mx_model_int$A$free[parameter_table$row[i],new_latent] <- FALSE
 
-    mx_model_int$A$values[parameter_table$col[i],new_latent] <- sign(current_value)*sqrt(abs(current_value) * var_ii)
-    mx_model_int$A$free[parameter_table$col[i],new_latent] <- FALSE
+    mx_model_int$A$values[parameter_table$col[i],new_latent] <- 1
+    mx_model_int$A$free[parameter_table$col[i],new_latent] <- TRUE
 
     # remove covariance
     mx_model_int$S$values[parameter_table$row[i],parameter_table$col[i]] <- 0
