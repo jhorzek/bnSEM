@@ -1,0 +1,268 @@
+---
+title: "Conditional-and-Interventional-Distribution"
+output: rmarkdown::html_vignette
+bibliography: bibliography.bib
+vignette: >
+  %\VignetteIndexEntry{Conditional-and-Interventional-Distribution}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message=FALSE}
+library(bnSEM)
+```
+
+> Warning: The following is very experimental and could be very wrong. This is
+just a first draft at getting interventional distributions from SEM by leveraging
+Bayesian networks. A proper discussion of observational and interventional
+distribution can be found in @gische2022beyond.
+
+Bayesian Networks allow investigating the conditional and interventional 
+distribution of network nodes. 
+
+The central difference between conditional and interventional distribution
+can be explained with the classical sprinkler-rain model [see e.g.,
+@murphy2012machine, p. 944]. However, because it is a German tradition to explain
+everything with cars, we will use a variation thereof. Let's assume we 
+are interested in the relations between Rain (R), hydroplaning (H) and windscreen
+wipers (W). Rain causes both hydroplaning and the activation of windscreen wipers:
+
+```{r, echo=FALSE}
+par(mar = rep(0, 4))
+bnlearn::model2network("[R][W|R][H|R]") |>
+  plot()
+```
+
+Now, knowing that the windscreen wipers are activated, it is a fairly likely that
+it rains and therefore the likelihood of hydroplaning is also higher. This is 
+expressed by the *conditional distribution* $P(R = \text{TRUE} | W  = \text{TRUE})$.
+
+Of course, activating or deactivating the windscreen wipers (i.e., intervening
+on the windscreen wipers) will not cause the weather to change, nor will it cause
+hydroplaning. This is expressed in the *interventional distribution* 
+$P(R = \text{TRUE} | do(W = \text{TRUE}))$.
+
+### Specity Model in bnlearn
+
+Let's investigate the model above with bnlearn [@scutari2009learning].
+
+```{r}
+# the following code is adapted from https://www.bnlearn.com/examples/custom-fitted/
+library(bnlearn)
+R <- matrix(c(0.2, 0.8), 
+            ncol = 2, 
+            dimnames = list(NULL, c("TRUE", "FALSE")))
+
+W <- matrix(data = c(.9, .2,
+                     .1, .8), 
+            nrow = 2,
+            ncol = 2,
+            byrow = TRUE,
+            dimnames = list(c("TRUE", "FALSE"),
+                            c("TRUE", "FALSE")))
+
+H <- matrix(data = c(.8, .05,
+                     .2, .95), 
+            nrow = 2,
+            ncol = 2,
+            byrow = TRUE,
+            dimnames = list(c("TRUE", "FALSE"),
+                            c("TRUE", "FALSE")))
+
+net = model2network("[R][W|R][H|R]")
+fit = custom.fit(net, dist = list(R = R, 
+                                  W = W, 
+                                  H = H))
+print(fit)
+```
+
+### Conditional Distribution
+
+Let's first investigate the conditional probability of hydroplaning given that the windscreen  
+wipers are on. We can do so with the `cpquery` function (see `?bnlearn::cpquery`):
+
+```{r}
+cpquery(fitted = fit, 
+        event = (H == "TRUE"), 
+        evidence = (W == "TRUE"),
+        n = 100000)
+```
+
+Now, let's investigate the conditional probability of hydroplaning given that the windscreen  
+wipers are off:
+
+```{r}
+cpquery(fitted = fit, 
+        event = (H == "TRUE"), 
+        evidence = (W == "FALSE"),
+        n = 100000)
+```
+
+We can see that knowing the status of the windscreen wiper allows us to also make a better
+guess of whether to expect hydroplaning.
+
+### Interventional Distribution
+
+For the interventional distribution we have to look at the so-called mutilated
+network (see `?bnlearn::mutilated`). The basic idea here is that intervening
+on the windscreen wiper will cut any connection of the windscreen wiper and its parent nodes 
+(here rain). First, let's look at the probability of hydroplaning given we turn the windscreen
+wipers on. In the following, note how windscreen wipers W is no longer affected
+by rain R:
+```{r}
+mut <- mutilated(x = fit,
+                 evidence = list("W" = "TRUE"))
+print(mut)
+```
+
+The probability of hydroplaning given we turn the windscreen
+wipers on is given by:
+```{r}
+cpquery(fitted = mut, 
+        event = (H == "TRUE"), 
+        evidence = TRUE,
+        n = 100000)
+```
+
+Now, let's look at the probability of hydroplaning given we turn the windscreen
+wipers off:
+```{r}
+mut <- mutilated(x = fit,
+                 evidence = list("W" = "FALSE"))
+print(mut)
+
+cpquery(fitted = mut, 
+        event = (H == "TRUE"), 
+        evidence = TRUE,
+        n = 100000)
+```
+
+Note how the probability of hydroplaning is no longer predicted by the windscreen
+wiper status. This is because we cut the link to the parent node - rain R - by
+intervening on the windscreen wiper.
+
+## Structural Equation Models
+
+The difference between conditional and interventional distribution in SEM is discussed in
+detail by @gische2022beyond.
+
+To apply the ideas outlined above to an SEM, we will use a the Political Democracy
+model fitted with OpenMx [@neale2016openmx]. The model is given by:
+
+```{r, message = FALSE}
+library(mxsem)
+model <- '
+  # latent variable definitions
+     ind60 =~ x1 + x2 + x3
+     dem60 =~ y1 + a*y2 + b*y3 + c*y4
+     dem65 =~ y5 + a*y6 + b*y7 + c*y8
+
+  # regressions
+    dem60 ~ ind60
+    dem65 ~ ind60 + dem60
+
+  # residual correlations
+    y1 ~~ y5
+    y2 ~~ y4 + y6
+    y3 ~~ y7
+    y4 ~~ y8
+    y6 ~~ y8
+'
+
+mx_model <- mxsem(model,
+                  data = OpenMx::Bollen) |>
+  OpenMx::mxTryHard()
+```
+
+First, we translate the model to a Bayesian network:
+```{r, message = FALSE}
+network <- bnSEM::bnSEM(mx_model = mx_model)
+```
+
+Next, we want to investigate the conditional distribution of dem65 given 
+y6 = 1. Here, we will use the cpdist function to generate samples.
+
+```{r}
+cond_dist <- bnlearn::cpdist(fitted = network$bayes_net, 
+                             nodes = "dem65", 
+                             evidence = list("y6" = 1), 
+                             method = "lw")
+# Using likelihood weighting, we have to take the weights into account when
+# computing the expected value and the variance
+# mean
+(m <- sum(cond_dist$dem65 * attr(cond_dist, "weights")) / sum(attr(cond_dist, "weights")))
+# variance
+sum(attr(cond_dist, "weights") * (cond_dist$dem65 - m)^2)/ 
+  sum(attr(cond_dist, "weights"))
+```
+
+To get the interventional distribution, we can again use the mutilated network:
+```{r}
+mut <- mutilated(x = network$bayes_net, 
+                 evidence = list("y6" = 1))
+inter_dist <- cpdist(fitted = mut,
+                     nodes = "dem65",
+                     evidence = TRUE,
+                     method = "lw")
+# mean
+(m <- sum(inter_dist$dem65 * attr(inter_dist, "weights")) / sum(attr(inter_dist, "weights")))
+# variance
+sum(attr(inter_dist, "weights") * (inter_dist$dem65 - m)^2)/ 
+  sum(attr(inter_dist, "weights"))
+```
+Note that this is identical to the expected value of dem65 (0; with some numerical 
+imprecision due to sampling).
+
+Let's look at another example. To this end, we will first check the mean and
+variance of x1 in our network.
+```{r}
+dist <- bnlearn::cpdist(fitted = network$bayes_net, 
+                        nodes = "x1", 
+                        evidence = TRUE, 
+                        method = "lw")
+# mean
+(m <- sum(dist$x1 * attr(dist, "weights")) / sum(attr(dist, "weights")))
+# variance
+sum(attr(dist, "weights") * (dist$x1 - m)^2)/ 
+  sum(attr(dist, "weights"))
+```
+
+Now, let's check the conditional mean and variance of x1 are given that
+dem60 = 3
+```{r}
+cond_dist <- bnlearn::cpdist(fitted = network$bayes_net, 
+                             nodes = "x1", 
+                             evidence = list("dem60" = 3), 
+                             method = "lw")
+# mean
+(m <- sum(cond_dist$x1 * attr(cond_dist, "weights")) / sum(attr(cond_dist, "weights")))
+# variance
+sum(attr(cond_dist, "weights") * (cond_dist$x1 - m)^2)/ 
+  sum(attr(cond_dist, "weights"))
+```
+Note how knowledge about dem60 provides us with information about the indicator
+x1 of ind60. 
+
+When intervening on dem60, in contrast, we don't change our expectation for x1:
+```{r}
+mut <- mutilated(x = network$bayes_net, 
+                 evidence = list("dem60" = 10))
+inter_dist <- cpdist(fitted = mut,
+                     nodes = "x1",
+                     evidence = TRUE,
+                     method = "lw")
+# mean
+(m <- sum(inter_dist$x1 * attr(inter_dist, "weights")) / sum(attr(inter_dist, "weights")))
+# variance
+sum(attr(inter_dist, "weights") * (inter_dist$x1 - m)^2)/ 
+  sum(attr(inter_dist, "weights"))
+```
+
+# Bibliography

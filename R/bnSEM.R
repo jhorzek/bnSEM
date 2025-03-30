@@ -5,13 +5,13 @@
 #' distributions of the SEM.
 #'
 #' @param mx_model fitted OpenMx model of type MxRAMModel
-#' @param phantom_free what to free in the phantom variables. Currently only supports "variance"
-#' @param optimize should the substitute model in case of covariances be optimized? If
-#' the model is not optimized, the Bayesian Network may deviate from the SEM.
+#' @param optimize should the substitute model in case of covariances be optimized?
 #' @returns list with
-#'  \item{bayes_net: }{A fitted Bayesian network of class bn.fit}
-#'  \item{dag: }{The underlying directed acyclical graph}
-#'  \item{internal: }{Internal elements}
+#' \itemize{
+#'  \item bayes_net: A fitted Bayesian network of class bn.fit
+#'  \item dag: The underlying directed acyclical graph
+#'  \item internal: Internal elements
+#' }
 #' @import mxsem
 #' @import OpenMx
 #' @import bnlearn
@@ -67,13 +67,10 @@
 #' round(abs(coef(fit_sim) -
 #'             coef(mx_model)) / abs(coef(mx_model)), 3)
 bnSEM <- function(mx_model,
-                  phantom_free = "variance",
                   optimize = TRUE){
 
   ##### Setup model & parameters ####
-
   check_mx_model(mx_model = mx_model,
-                 phantom_free = phantom_free,
                  optimize = optimize)
 
   # Extract parameter table
@@ -86,7 +83,6 @@ bnSEM <- function(mx_model,
 
     mx_model_int <- cov_to_phantom(parameter_table,
                                    mx_model,
-                                   phantom_free,
                                    optimize)
 
   }else{

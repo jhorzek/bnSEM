@@ -9,7 +9,6 @@
 #' Christian Gische
 #' @param parameter_table parameter table of an OpenMx model (see ?OpenMx::omxLocateParameters)
 #' @param mx_model fitted OpenMx model
-#' @param phantom_free what to free in the phantom variables. Currently only supports "variance"
 #' @param optimize should the substitute model in case of covariances be optimized?
 #' @returns fitted mx_model with phantom variables
 #' @importFrom methods is
@@ -17,7 +16,6 @@
 #' @keywords internal
 cov_to_phantom <- function(parameter_table,
                            mx_model,
-                           phantom_free = "variance",
                            optimize){
 
   mx_model_int <- mx_model
@@ -66,22 +64,28 @@ cov_to_phantom <- function(parameter_table,
                                    free = FALSE,
                                    labels = paste0("one", mxsem::unicode_directed(),
                                                    new_latent)),
-                            # Add variance of 1
+                            # Add variance. The main challenge here is that
+                            # setting the variance to a value that is too large
+                            # often results in non-convergence. Similarly,
+                            # if it is too small, convergence also won't happen.
+                            # As a simple solution for now, we take the covariance
+                            # value as an indicator of how large the variance should
+                            # be.
                             mxPath(from = new_latent,
                                    to = new_latent,
                                    arrows = 2,
-                                   values = 1,
-                                   free = TRUE,
+                                   values = max(c(abs(current_value), .1)),
+                                   free = FALSE,
                                    lbound = 1e-6,
                                    labels = parameter_table$label[i]))
 
     # Additionally, we need to specify loadings on the covarying items
     # One loading will be constrained to 1, the other freely estimated
-    mx_model_int$A$values[parameter_table$row[i],new_latent] <- sqrt(abs(current_value) * var_ii)
+    mx_model_int$A$values[parameter_table$row[i],new_latent] <- 1
     mx_model_int$A$free[parameter_table$row[i],new_latent] <- FALSE
 
-    mx_model_int$A$values[parameter_table$col[i],new_latent] <- sign(current_value)*sqrt(abs(current_value) * var_ii)
-    mx_model_int$A$free[parameter_table$col[i],new_latent] <- FALSE
+    mx_model_int$A$values[parameter_table$col[i],new_latent] <- 1
+    mx_model_int$A$free[parameter_table$col[i],new_latent] <- TRUE
 
     # remove covariance
     mx_model_int$S$values[parameter_table$row[i],parameter_table$col[i]] <- 0

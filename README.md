@@ -72,8 +72,8 @@ qgraph::qgraph(network$dag)
 
 With our Bayesian Network, we can now investigate the conditional
 distribution of variables in our model (see
-`vignette("Example", package = "bnSEM")` for a comparison to rejection
-sampling)
+`vignette("Inference-Example", package = "bnSEM")` for a comparison to
+rejection sampling)
 
 ``` r
 # Check conditional distribution
@@ -81,7 +81,7 @@ sampling)
 bnlearn::cpquery(fitted = network$bayes_net,
                  event = (dem65 > 1 & dem65 < 2),
                  evidence = (dem60 > 1))
-#> [1] 0.3425735
+#> [1] 0.3457536
 
 # Get distribution under this assumption:
 dist <- bnlearn::cpdist(fitted = network$bayes_net,
@@ -126,11 +126,11 @@ inter_dist <- cpdist(fitted = mut,
                      method = "lw")
 # mean
 (m <- sum(inter_dist$dem65 * attr(inter_dist, "weights")) / sum(attr(inter_dist, "weights")))
-#> [1] 1.734475
+#> [1] 1.72881
 # variance
 sum(attr(inter_dist, "weights") * (inter_dist$dem65 - m)^2)/ 
   sum(attr(inter_dist, "weights"))
-#> [1] 0.326892
+#> [1] 0.3255103
 ```
 
 This is higher than the original estimates for the mean and variance of
@@ -153,11 +153,11 @@ inter_dist <- cpdist(fitted = mut,
                      method = "lw")
 # mean
 (m <- sum(inter_dist$ind60 * attr(inter_dist, "weights")) / sum(attr(inter_dist, "weights")))
-#> [1] 0.006812912
+#> [1] -0.0010376
 # variance
 sum(attr(inter_dist, "weights") * (inter_dist$ind60 - m)^2)/ 
   sum(attr(inter_dist, "weights"))
-#> [1] 0.454824
+#> [1] 0.4445823
 ```
 
 Because `dem65` has no effect on `ind60`, this is identical to the
@@ -187,19 +187,19 @@ fit_sim <- mxsem(model,
 ``` r
 round(coef(fit_sim) - coef(mx_model), 3)
 #>    ind60→x2    ind60→x3 ind60→dem60 ind60→dem65           a           b 
-#>       0.000      -0.003      -0.007       0.001      -0.004      -0.002 
+#>     -27.007      21.726     -90.509     140.349      -0.059      -0.059 
 #>           c dem60→dem65       y1↔y1       y2↔y2       y3↔y3       y2↔y4 
-#>      -0.006       0.001       0.008       0.018       0.000       0.017 
+#>      -0.016       0.172      -0.319      -0.222       0.323       0.069 
 #>       y4↔y4       y2↔y6       y6↔y6       x1↔x1       x2↔x2       x3↔x3 
-#>       0.007      -0.018       0.009       0.000      -0.002       0.000 
+#>      -0.056       0.236       1.700       0.652       1.817       1.259 
 #>       y1↔y5       y5↔y5       y3↔y7       y7↔y7       y4↔y8       y6↔y8 
-#>       0.009       0.015      -0.011      -0.005      -0.011      -0.022 
+#>      -0.111       0.408       0.100      -0.095       0.198       1.696 
 #>       y8↔y8 ind60↔ind60 dem60↔dem60 dem65↔dem65      one→y1      one→y2 
-#>      -0.002       0.000       0.013       0.001      -0.005      -0.003 
+#>       1.602      -0.449       0.132       0.014      -0.083       0.274 
 #>      one→y3      one→y4      one→y6      one→x1      one→x2      one→x3 
-#>      -0.015      -0.010      -0.005      -0.002      -0.004      -0.002 
+#>      -0.045       0.144       0.131      -0.175       0.050      -0.039 
 #>      one→y5      one→y7      one→y8 
-#>       0.003      -0.014      -0.012
+#>       0.352       0.071       0.137
 ```
 
 ## Central Challenge

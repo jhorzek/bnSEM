@@ -4,21 +4,20 @@
 \alias{bnSEM}
 \title{bnSEM}
 \usage{
-bnSEM(mx_model, phantom_free = "variance", optimize = TRUE)
+bnSEM(mx_model, optimize = TRUE)
 }
 \arguments{
 \item{mx_model}{fitted OpenMx model of type MxRAMModel}
 
-\item{phantom_free}{what to free in the phantom variables. Currently only supports "variance"}
-
-\item{optimize}{should the substitute model in case of covariances be optimized? If
-the model is not optimized, the Bayesian Network may deviate from the SEM.}
+\item{optimize}{should the substitute model in case of covariances be optimized?}
 }
 \value{
 list with
- \item{bayes_net: }{A fitted Bayesian network of class bn.fit}
- \item{dag: }{The underlying directed acyclical graph}
- \item{internal: }{Internal elements}
+\itemize{
+ \item bayes_net: A fitted Bayesian network of class bn.fit
+ \item dag: The underlying directed acyclical graph
+ \item internal: Internal elements
+}
 }
 \description{
 bnSEM (Bayesian network SEM) translates OpenMx models to Bayesian networks

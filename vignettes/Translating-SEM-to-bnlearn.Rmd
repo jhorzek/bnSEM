@@ -1,0 +1,23 @@
+---
+title: "Translating-SEM-to-bnlearn"
+output: rmarkdown::html_vignette
+bibliography: bibliography.bib
+vignette: >
+  %\VignetteIndexEntry{Translating-SEM-to-bnlearn}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(bnSEM)
+```
+
+"A nonzero covariance [...] indicates the existence of an unobserved common cause of the variables"
+[@gische2022beyond, p. 871]

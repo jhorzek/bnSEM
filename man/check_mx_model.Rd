@@ -4,12 +4,10 @@
 \alias{check_mx_model}
 \title{check_mx_model}
 \usage{
-check_mx_model(mx_model, phantom_free, optimize)
+check_mx_model(mx_model, optimize)
 }
 \arguments{
 \item{mx_model}{fitted OpenMx model}
-
-\item{phantom_free}{what to free in the phantom variables. Currently only supports "variance"}
 
 \item{optimize}{should the substitute model in case of covariances be optimized?}
 }

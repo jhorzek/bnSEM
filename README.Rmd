@@ -82,7 +82,7 @@ qgraph::qgraph(network$dag)
 ## Inference
 
 With our Bayesian Network, we can now investigate the conditional distribution of
-variables in our model (see `vignette("Example", package = "bnSEM")` for a comparison
+variables in our model (see `vignette("Inference-Example", package = "bnSEM")` for a comparison
 to rejection sampling)
 
 ```{r, message=FALSE, fig.height=3}
