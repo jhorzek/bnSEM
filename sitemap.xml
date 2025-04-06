@@ -11,6 +11,8 @@
 <url><loc>https://jhorzek.github.io/bnSEM/reference/bnSEM.html</loc></url>
 <url><loc>https://jhorzek.github.io/bnSEM/reference/check_mx_model.html</loc></url>
 <url><loc>https://jhorzek.github.io/bnSEM/reference/cov_to_phantom.html</loc></url>
+<url><loc>https://jhorzek.github.io/bnSEM/reference/cov_to_phantom_cholesky.html</loc></url>
+<url><loc>https://jhorzek.github.io/bnSEM/reference/cov_to_phantom_refit.html</loc></url>
 <url><loc>https://jhorzek.github.io/bnSEM/reference/create_bn_model.html</loc></url>
 <url><loc>https://jhorzek.github.io/bnSEM/reference/index.html</loc></url>
 <url><loc>https://jhorzek.github.io/bnSEM/reference/pt_to_pt_bn.html</loc></url>
