@@ -4,8 +4,39 @@
 #' fitted with bnlearn. The resulting network can be used to investigate conditional
 #' distributions of the SEM.
 #'
+#' In Bayesian networks, all dependencies between variables must be expressed with
+#' directed "effects". There is no covariance in the same sense as in OpenMx.
+#' Instead, we must replace covariances with effects of a latent phantom variable.
+#' For instance x1 <-> x2 is replaced with ph -> y1; ph -> y2; ph <-> ph. The
+#' resulting model is identical to the initial OpenMx model in terms of fit, but the residual
+#' variance estimates will change.
+#'
+#' bnSEM currently supports two different approaches:
+#'
+#' First, when using phantom_type = "refit", bnSEM will add phantom variables only
+#' for covariances and re-estimate the SEM. The advantage of this approach is that
+#' each manifest and latent variable of the original model will still have a residual
+#' variance in the new model and the Bayesian Network. This is necessary for cpdist
+#' to work as expected. The main disadvantages are that (1) refitting may fail and (2)
+#' constraints on the variance and covariance parameters cannot be accounted for.
+#' The implementation has been improved by Dr. Christian Gische.
+#'
+#' Second, when using phantom_type = "cholesky", bnSEM will replace the full residual
+#' (co-)variance matrix with a Cholesky decomposition (S = DD^t). The latent and
+#' manifest variables (v) of the original model are now given by v = Du, where u
+#' is a vector of the same size as v with standard-normally distributed items.
+#' The main advantage of the Cholesky decomposition approach is that it does not
+#' require refitting the model and therefore also does not result in non-convergence.
+#' The main disadvantage is that each variable in the original model is now determined
+#' fully by the new variables in u. That is, none of the original variables has any
+#' residual variances in the new model. This can result in unexpected behavior
+#' when using cpdist on the model, where distributions for deterministic variables
+#' do not work. This approach has been suggested by Prof. Manuel C. Voelkle.
+#'
 #' @param mx_model fitted OpenMx model of type MxRAMModel
-#' @param optimize should the substitute model in case of covariances be optimized?
+#' @param phantom_type type of phantom variable approach to use, There are two approaches:
+#' "refit" and "cholesky". See details.
+#' @param optimize should the substitute model in case of phantom_type = "refit" be optimized?
 #' @returns list with
 #' \itemize{
 #'  \item bayes_net: A fitted Bayesian network of class bn.fit
@@ -67,6 +98,7 @@
 #' round(abs(coef(fit_sim) -
 #'             coef(mx_model)) / abs(coef(mx_model)), 3)
 bnSEM <- function(mx_model,
+                  phantom_type = "refit",
                   optimize = TRUE){
 
   ##### Setup model & parameters ####
@@ -83,6 +115,7 @@ bnSEM <- function(mx_model,
 
     mx_model_int <- cov_to_phantom(parameter_table,
                                    mx_model,
+                                   phantom_type = phantom_type,
                                    optimize)
 
   }else{

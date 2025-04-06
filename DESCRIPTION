@@ -20,6 +20,7 @@ Depends:
     OpenMx,
     bnlearn
 Imports:
+    Matrix,
     methods,
     stats
 Suggests: 
