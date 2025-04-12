@@ -43,10 +43,14 @@ cov_to_phantom <- function(parameter_table,
                            phantom_type,
                            optimize){
 
-  if(tolower(phantom_type) == "refit"){
-    return(cov_to_phantom_refit(parameter_table = parameter_table,
-                                mx_model = mx_model,
-                                optimize = optimize))
+  if(tolower(phantom_type) == "refit-free-loadings"){
+    return(cov_to_phantom_refit_loadings(parameter_table = parameter_table,
+                                         mx_model = mx_model,
+                                         optimize = optimize))
+  }else if(tolower(phantom_type) == "refit-free-single-loading"){
+    return(cov_to_phantom_refit_single_loading(parameter_table = parameter_table,
+                                               mx_model = mx_model,
+                                               optimize = optimize))
   }else if(tolower(phantom_type) == "cholesky"){
     return(cov_to_phantom_cholesky(parameter_table = parameter_table,
                                    mx_model = mx_model))
@@ -74,9 +78,9 @@ cov_to_phantom <- function(parameter_table,
 #' @importFrom methods is
 #' @importFrom stats logLik
 #' @keywords internal
-cov_to_phantom_refit <- function(parameter_table,
-                                 mx_model,
-                                 optimize){
+cov_to_phantom_refit_single_loading <- function(parameter_table,
+                                                mx_model,
+                                                optimize){
   mx_model_int <- mx_model
 
   if(!is(parameter_table, "data.frame"))
@@ -94,16 +98,6 @@ cov_to_phantom_refit <- function(parameter_table,
              (parameter_table$row == parameter_table$col[i]) &
              (parameter_table$col == parameter_table$row[i])) < i)
       next
-
-    cov_at <- parameter_table[i,]
-
-    # get variances; these will be used for scaling the loadings of
-    # the phantom variables. The approach used in the
-    # following is based on p. 8 in Merkle, E. C., & Rosseel,
-    # Y. (2015). blavaan: Bayesian structural equation models via
-    # parameter expansion. arXiv preprint arXiv:1511.05604.
-    var_ii <- mx_model$S$values[cov_at$row, cov_at$row]
-    var_jj <- mx_model$S$values[cov_at$col, cov_at$col]
 
     # we need to add a latent phantom variable
     current_value <- parameter_table$value[i]
@@ -136,7 +130,8 @@ cov_to_phantom_refit <- function(parameter_table,
                                    values = max(c(abs(current_value), .1)),
                                    free = FALSE,
                                    lbound = 1e-6,
-                                   labels = parameter_table$label[i]))
+                                   labels = paste0(new_latent, mxsem::unicode_undirected(),
+                                                   new_latent)))
 
     # Additionally, we need to specify loadings on the covarying items
     # One loading will be constrained to 1, the other freely estimated
@@ -172,6 +167,137 @@ cov_to_phantom_refit <- function(parameter_table,
   }
   return(mx_model_int)
 }
+
+#' cov_to_phantom_refit_loadings
+#'
+#' In Bayesian networks, all dependencies between variables must be expressed with
+#' directed "effects". There is no covariance in the same sense as in OpenMx.
+#' Instead, we must replace covariances with effects of a latent phantom variable.
+#' For instance x1 <-> x2 is replaced with ph -> y1; ph -> y2; ph <-> ph. The
+#' resulting model is identical to the initial OpenMx model in terms of fit, but the residual
+#' variance estimates will change. For the current implementation, the loadings of the
+#' phantom on the observed variables is (1) constraint to equality if the covariance
+#' is positive and (2) constraint to have equal values, but opposite signs for covariances
+#' that are negative. The variance is constraint to one. This is based on a discussion
+#' with Prof. Marcel Paulssen for a bifactor modeling approach.
+#'
+#' @param parameter_table parameter table of an OpenMx model (see ?OpenMx::omxLocateParameters)
+#' @param mx_model fitted OpenMx model
+#' @param optimize should the substitute model in case of covariances be optimized?
+#' @returns fitted mx_model with phantom variables
+#' @importFrom methods is
+#' @importFrom stats logLik
+#' @keywords internal
+cov_to_phantom_refit_loadings <- function(parameter_table,
+                                          mx_model,
+                                          optimize){
+  mx_model_int <- mx_model
+
+  if(!is(parameter_table, "data.frame"))
+    stop("parameter_table must be a data.frame. Use as.data.frame(parameter_table).")
+
+  message("Found covariances in your model. The model will be translated to an",
+          " equivalent model with phantom variables. The model with phantom ",
+          "variables will be returned in the internal list as 'internal_model'")
+
+  for(i in which((parameter_table$matrix == "S") & (parameter_table$row != parameter_table$col))){
+
+    # covariance matrix is symmetric -> skip if element on opposite side was already
+    # visited
+    if(which((parameter_table$matrix == "S") &
+             (parameter_table$row == parameter_table$col[i]) &
+             (parameter_table$col == parameter_table$row[i])) < i)
+      next
+
+    current_value <- parameter_table$value[i]
+    from_label <- colnames(mx_model$S$values)[parameter_table$col[i]]
+    to_label   <- rownames(mx_model$S$values)[parameter_table$row[i]]
+
+    # we need to add a latent phantom variable
+    ph_var <- 1
+    while(paste0("ph_", parameter_table$label[i], "_", ph_var) %in% mx_model_int$latentVars){
+      ph_var <- ph_var + 1
+    }
+    new_latent <- paste0("ph_", parameter_table$label[i], "_", ph_var)
+    new_latent_no_unicode <- gsub(x = new_latent,
+                                  pattern = mxsem::unicode_undirected(),
+                                  replacement = "__")
+
+    mx_model_int <- mxModel(mx_model_int,
+                            latentVars = new_latent,
+                            # Add intercept of 0
+                            mxPath(from = "one",
+                                   to = new_latent,
+                                   values = 0,
+                                   free = FALSE,
+                                   labels = paste0("one",
+                                                   mxsem::unicode_directed(),
+                                                   new_latent)),
+                            # Add variance. The main challenge here is that
+                            # setting the variance to a value that is too large
+                            # often results in non-convergence. Similarly,
+                            # if it is too small, convergence also won't happen.
+                            # As a simple solution for now, we take the covariance
+                            # value as an indicator of how large the variance should
+                            # be.
+                            mxPath(from = new_latent,
+                                   to = new_latent,
+                                   arrows = 2,
+                                   values = 1,
+                                   free = FALSE,
+                                   lbound = 1e-6,
+                                   labels = paste0(new_latent,
+                                                   mxsem::unicode_undirected(),
+                                                   new_latent)))
+
+    # Additionally, we need to specify loadings on the covarying items
+    mx_model_int$A$values[parameter_table$row[i],new_latent] <- 0
+    mx_model_int$A$labels[parameter_table$row[i],new_latent] <- paste0(
+      paste0(new_latent_no_unicode, "_", to_label), "[1,1]")
+    mx_model_int$A$free[parameter_table$row[i],new_latent] <- FALSE
+
+    mx_model_int$A$values[parameter_table$col[i],new_latent] <- 0
+    mx_model_int$A$labels[parameter_table$col[i],new_latent] <- paste0(new_latent_no_unicode,
+                                                                       "_",
+                                                                       from_label)
+    mx_model_int$A$free[parameter_table$col[i],new_latent] <- TRUE
+
+    # Add equality constraint on the loadings
+    mx_model_int <- OpenMx::mxModel(mx_model_int,
+                                    OpenMx::mxAlgebraFromString(algString = ifelse(
+                                      current_value < 0,
+                                      paste0("-", mx_model_int$A$labels[parameter_table$col[i],new_latent]),
+                                      mx_model_int$A$labels[parameter_table$col[i],new_latent]
+                                    ),
+                                    name = paste0(new_latent_no_unicode, "_", to_label)))
+
+    # remove covariance
+    mx_model_int$S$values[parameter_table$row[i],parameter_table$col[i]] <- 0
+    mx_model_int$S$free[parameter_table$row[i],parameter_table$col[i]] <- FALSE
+    mx_model_int$S$labels[parameter_table$row[i],parameter_table$col[i]] <- ""
+
+    mx_model_int$S$values[parameter_table$col[i],parameter_table$row[i]] <- 0
+    mx_model_int$S$free[parameter_table$col[i],parameter_table$row[i]] <- FALSE
+    mx_model_int$S$labels[parameter_table$col[i],parameter_table$row[i]] <- ""
+  }
+
+  if(optimize){
+    # in case of phantom variables, we now have to refit the model
+    message("Refitting the model with phantom variables. The fit will ",
+            "be the same, but the variances of the residuals will change.")
+
+    mx_model_int <- mx_model_int |>
+      mxTryHard()
+
+    # check fit
+    if(abs(logLik(mx_model_int) - logLik(mx_model)) / abs(logLik(mx_model))  > .01)
+      warning("Refactoring the model failed. Observed deviations in likelihood!")
+  }else{
+    warning("The model with phantom variables has not been optimized")
+  }
+  return(mx_model_int)
+}
+
 
 #' cov_to_phantom_cholesky
 #'
@@ -228,6 +354,21 @@ cov_to_phantom_cholesky <- function(parameter_table,
   # items = chol_cov %*% x
   # Based on this, we can compute the variances and covariances of our new
   # chol_cov %*% t(chol_cov)
+  # However, we will use another step first: Currently, we will end up with
+  # phantom variables that are somewhat arbitrary as they have a variance of
+  # 1 and are then connected to the observed variables and latent variables
+  # with a directed effect. We will change this such that each phantom variable
+  # is connected to one of the manifest / latent variables with an effect of 1
+  # (making the phantom item almost identical to the observed one - with the
+  # exception of the causal implications of the directed effects of the phantom
+  # variables).
+  ph_variances <- diag(chol_cov)^2
+  names(ph_variances) <- paste0("ph_", rownames(mx_model$S$values))
+  ph_effects   <- chol_cov %*% solve(diag(diag(chol_cov)))
+  dimnames(ph_effects) <- list(
+    rownames(mx_model$S$values),
+    paste0("ph_", rownames(mx_model$S$values))
+  )
 
   # First, we remove all variances and covariances from our model
   mx_model_int$S$labels[] <- NA
@@ -235,44 +376,43 @@ cov_to_phantom_cholesky <- function(parameter_table,
   mx_model_int$S$free[] <- FALSE
 
   # We add as many phantom variables as there are columns in our Cholesky decomposition
-  for(i in 1:ncol(chol_cov))
+  for(i in colnames(ph_effects))
     mx_model_int <- mxModel(mx_model_int,
-                            latentVars = paste0("ph_", i),
+                            latentVars = i,
                             # Add intercept of 0
                             mxPath(from = "one",
-                                   to = paste0("ph_", i),
+                                   to = i,
                                    values = 0,
                                    free = FALSE,
                                    labels = paste0("one", mxsem::unicode_directed(),
-                                                   paste0("ph_", i))),
-                            mxPath(from = paste0("ph_", i),
-                                   to = paste0("ph_", i),
+                                                   i)),
+                            mxPath(from = i,
+                                   to = i,
                                    arrows = 2,
-                                   values = 1,
+                                   values = ph_variances[i],
                                    free = FALSE,
                                    lbound = 1e-6,
-                                   labels = paste0("var_", paste0("ph_", i))))
+                                   labels = paste0("var_", i)))
 
   # Next, we define directed effects of each of those phantom variables on our
   # model variables based on the Cholesky decomposition
-  for(i in 1:nrow(chol_cov)){
-    for(j in 1:ncol(chol_cov)){
-      from <- paste0("ph_", j)
-      to <- colnames(chol_cov)[i]
-      value <- chol_cov[i, j]
+  for(i in rownames(ph_effects)){
+    for(j in colnames(ph_effects)){
+      value <- ph_effects[i, j]
 
       mx_model_int <- mxModel(mx_model_int,
                               # Add effect from phantom to observed
-                              mxPath(from = paste0("ph_", j),
-                                     to = colnames(chol_cov)[i],
-                                     values = chol_cov[i, j],
+                              mxPath(from = j,
+                                     to = i,
+                                     values = value,
                                      free = TRUE,
-                                     labels = paste0(paste0("ph_", j),
+                                     labels = paste0(i,
                                                      mxsem::unicode_directed(),
-                                                     colnames(chol_cov)[i])))
+                                                     j)))
     }
   }
 
+  browser()
   mx_model_int <- OpenMx::mxRun(mx_model_int,
                                 useOptimizer = FALSE,
                                 silent = TRUE)

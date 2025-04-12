@@ -4,15 +4,15 @@
 \alias{bnSEM}
 \title{bnSEM}
 \usage{
-bnSEM(mx_model, phantom_type = "refit", optimize = TRUE)
+bnSEM(mx_model, phantom_type = "refit-free-loadings", optimize = TRUE)
 }
 \arguments{
 \item{mx_model}{fitted OpenMx model of type MxRAMModel}
 
 \item{phantom_type}{type of phantom variable approach to use, There are two approaches:
-"refit" and "cholesky". See details.}
+"refit-free-loadings" and "cholesky". See details.}
 
-\item{optimize}{should the substitute model in case of phantom_type = "refit" be optimized?}
+\item{optimize}{should the substitute model in case of phantom_type = "refit-free-loadings" be optimized?}
 }
 \value{
 list with
@@ -35,17 +35,29 @@ For instance x1 <-> x2 is replaced with ph -> y1; ph -> y2; ph <-> ph. The
 resulting model is identical to the initial OpenMx model in terms of fit, but the residual
 variance estimates will change.
 
-bnSEM currently supports two different approaches:
+bnSEM currently supports three different approaches:
 
-First, when using phantom_type = "refit", bnSEM will add phantom variables only
-for covariances and re-estimate the SEM. The advantage of this approach is that
-each manifest and latent variable of the original model will still have a residual
+First, when using phantom_type = "refit-free-loadings", bnSEM will add phantom
+variables only for covariances and re-estimate the SEM. For "refit-free-loadings",
+the loadings of the phantom on the observed variables is (1) constraint to
+equality if the covariance is positive and (2) constraint to have equal values,
+but opposite signs for covariances that are negative. The variance is constraint
+to one. This is based on a discussion with Prof. Marcel Paulssen for a bifactor
+modeling approach.
+
+Second, when using phantom_type = "refit-free-single-loading", bnSEM will also add phantom
+variables only for covariances and re-estimate the SEM. However, in contrast
+to "refit-free-loadings" only one of the loadings is estimated, while the
+other one is constraint. This results in exactly the same fit as the first approach
+and is based on a suggestion by Dr. Christian Gische.
+
+The advantage of the refitting approaches is that each manifest and latent
+variable of the original model will still have a residual
 variance in the new model and the Bayesian Network. This is necessary for cpdist
 to work as expected. The main disadvantages are that (1) refitting may fail and (2)
 constraints on the variance and covariance parameters cannot be accounted for.
-The implementation has been improved by Dr. Christian Gische.
 
-Second, when using phantom_type = "cholesky", bnSEM will replace the full residual
+Third, when using phantom_type = "cholesky", bnSEM will replace the full residual
 (co-)variance matrix with a Cholesky decomposition (S = DD^t). The latent and
 manifest variables (v) of the original model are now given by v = Du, where u
 is a vector of the same size as v with standard-normally distributed items.
