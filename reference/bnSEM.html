@@ -50,7 +50,7 @@ distributions of the SEM.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bnSEM</span><span class="op">(</span><span class="va">mx_model</span>, phantom_type <span class="op">=</span> <span class="st">"refit"</span>, optimize <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bnSEM</span><span class="op">(</span><span class="va">mx_model</span>, phantom_type <span class="op">=</span> <span class="st">"refit-free-loadings"</span>, optimize <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -63,11 +63,11 @@ distributions of the SEM.</p>
 
 <dt id="arg-phantom-type">phantom_type<a class="anchor" aria-label="anchor" href="#arg-phantom-type"></a></dt>
 <dd><p>type of phantom variable approach to use, There are two approaches:
-"refit" and "cholesky". See details.</p></dd>
+"refit-free-loadings" and "cholesky". See details.</p></dd>
 
 
 <dt id="arg-optimize">optimize<a class="anchor" aria-label="anchor" href="#arg-optimize"></a></dt>
-<dd><p>should the substitute model in case of phantom_type = "refit" be optimized?</p></dd>
+<dd><p>should the substitute model in case of phantom_type = "refit-free-loadings" be optimized?</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -84,15 +84,25 @@ Instead, we must replace covariances with effects of a latent phantom variable.
 For instance x1 &lt;-&gt; x2 is replaced with ph -&gt; y1; ph -&gt; y2; ph &lt;-&gt; ph. The
 resulting model is identical to the initial OpenMx model in terms of fit, but the residual
 variance estimates will change.</p>
-<p>bnSEM currently supports two different approaches:</p>
-<p>First, when using phantom_type = "refit", bnSEM will add phantom variables only
-for covariances and re-estimate the SEM. The advantage of this approach is that
-each manifest and latent variable of the original model will still have a residual
+<p>bnSEM currently supports three different approaches:</p>
+<p>First, when using phantom_type = "refit-free-loadings", bnSEM will add phantom
+variables only for covariances and re-estimate the SEM. For "refit-free-loadings",
+the loadings of the phantom on the observed variables is (1) constraint to
+equality if the covariance is positive and (2) constraint to have equal values,
+but opposite signs for covariances that are negative. The variance is constraint
+to one. This is based on a discussion with Prof. Marcel Paulssen for a bifactor
+modeling approach.</p>
+<p>Second, when using phantom_type = "refit-free-single-loading", bnSEM will also add phantom
+variables only for covariances and re-estimate the SEM. However, in contrast
+to "refit-free-loadings" only one of the loadings is estimated, while the
+other one is constraint. This results in exactly the same fit as the first approach
+and is based on a suggestion by Dr. Christian Gische.</p>
+<p>The advantage of the refitting approaches is that each manifest and latent
+variable of the original model will still have a residual
 variance in the new model and the Bayesian Network. This is necessary for cpdist
 to work as expected. The main disadvantages are that (1) refitting may fail and (2)
-constraints on the variance and covariance parameters cannot be accounted for.
-The implementation has been improved by Dr. Christian Gische.</p>
-<p>Second, when using phantom_type = "cholesky", bnSEM will replace the full residual
+constraints on the variance and covariance parameters cannot be accounted for.</p>
+<p>Third, when using phantom_type = "cholesky", bnSEM will replace the full residual
 (co-)variance matrix with a Cholesky decomposition (S = DD^t). The latent and
 manifest variables (v) of the original model are now given by v = Du, where u
 is a vector of the same size as v with standard-normally distributed items.
@@ -152,14 +162,32 @@ do not work. This approach has been suggested by Prof. Manuel C. Voelkle.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Beginning initial fit attempt</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Running untitled1 with 39 parameters</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  Lowest minimum so far:  3097.63615807031</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  Lowest minimum so far:  3132.07452887361</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  Not all eigenvalues of the Hessian are positive: 7409.07977951187, 1708.4921031214, 655.260875997403, 625.899104490029, 457.72142428188, 376.258200994535, 366.924619040786, 271.011429005247, 265.437567430202, 157.393760304802, 111.339097771214, 72.616612034957, 63.9297690322516, 61.0383050737711, 56.627072254474, 54.3105925229991, 45.2632627355016, 41.9346170781772, 39.9711018611112, 37.1099691494525, 27.9475214045914, 23.504335315514, 13.8159828264391, 13.4584620171711, 10.1163268846973, 5.93679347294567, 4.63952548317951, 4.24632667695603, 3.04163267507704, 2.68408652935071, 2.61509853800472, 2.13390599951173, 1.33725658409888, -7.89480847384507, -12.9932368828123, -14.4031732798695, -17.401512022946, -22.8381101841975, -36.5544156727883</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Beginning fit attempt 1 of at maximum 10 extra tries</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Running untitled1 with 39 parameters</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  Lowest minimum so far:  3132.0745288736</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  Not all eigenvalues of the Hessian are positive: 7409.07946631424, 1708.49176254252, 655.262286350761, 625.899786188011, 457.721685876745, 376.260783922478, 366.932528233966, 271.009859911427, 265.438524600836, 157.396807010254, 111.342585804438, 72.6167766533036, 63.9352311045493, 61.0390482740306, 56.6339623736013, 54.3104453763072, 45.2632686570807, 41.9351454711872, 39.9767382744959, 37.1099239340399, 27.946888841747, 23.5034088419334, 13.8164979122581, 13.4625242475388, 10.1176775901302, 5.93688486525776, 4.64105325462696, 4.24682194640139, 3.04155839709106, 2.68485416828844, 2.61522710656298, 2.1339753363589, 1.33755296918274, -7.89552985437282, -12.9932320995248, -14.39474901683, -17.3937882550772, -22.8219453788941, -36.554413874216</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Beginning fit attempt 2 of at maximum 10 extra tries</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Running untitled1 with 39 parameters</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  Lowest minimum so far:  3132.07452887354</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  Not all eigenvalues of the Hessian are positive: 7409.07755515461, 1708.49179450561, 655.269018739405, 625.904731956063, 457.721216593275, 376.266395763769, 366.940360898295, 271.016420528627, 265.445378915433, 157.403686520319, 111.344026810214, 72.6164364448542, 63.9411636309463, 61.0384141267404, 56.6459876508006, 54.3104338818113, 45.2630482445342, 41.9349710701663, 39.9777283916397, 37.1096191019541, 27.9471671029214, 23.503821576877, 13.8195204570364, 13.4656916133495, 10.1184430302727, 5.93788731343455, 4.6421197361214, 4.24805452974307, 3.04254921541662, 2.68559198738686, 2.61556886539968, 2.1343145244916, 1.33783463767334, -7.87939297174849, -12.9855013329785, -14.3863270812647, -17.3846851695095, -22.8219259369459, -36.5466883847122</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Beginning fit attempt 3 of at maximum 10 extra tries</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Running untitled1 with 39 parameters</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  Lowest minimum so far:  3097.6361580659</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Solution found</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  Solution found!  Final fit=3097.6362 (started at 3139.3789)  (1 attempt(s): 1 valid, 0 errors)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  Solution found!  Final fit=3097.6362 (started at 3134.3045)  (4 attempt(s): 4 valid, 0 errors)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  Start values from best fit:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2.17965668781529,1.81820958740113,1.47133053613888,0.600476520459829,1.19078206378167,1.17453995861121,1.25098127332152,0.865041383144329,1.00000098001506,1.00000276589204,0.999995095332759,1.00000099076327,0.999978174726985,0.999996893287447,1.27210409164421,3.9582155570106,4.24409226776088,1.42157134203641,1.41337816400277,0.0813878044779179,0.120428133551215,0.466659809304263,1.73050125907096,2.84846262094311,1.57309528936656,0.448598974621308,3.87532084824584,0.164463011143348,5.46465258474983,4.25642261191493,6.5630917519263,4.4525140945363,2.97805547157172,5.05438126896023,4.79218911248752,3.55768504367496,5.13623815452341,6.19624703549504,4.04337055342448</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2.17965694601052,1.8182095011406,1.47133099598838,0.600474653668476,1.19078350357395,1.17454016540082,1.25098064748735,0.865041423996671,0.763246442204963,1.2000523657831,-1.47750116242389,-0.843553738394088,-0.602332059455713,-1.17123333497147,1.27210511655049,3.95820573640009,4.2440902031704,1.42155802177756,1.41339221020283,0.0813876987310841,0.120427701910668,0.466659891686399,1.73049836432522,2.8484543853871,1.57310358628673,0.448599049551262,3.87532058399932,0.164463388633157,5.46466667088102,4.25644287857883,6.56311025543758,4.45253304354606,2.97807408933287,5.05438384047728,4.79219462734189,3.55768978686791,5.13625192503549,6.19626389645749,4.04338968668393</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot network</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">network</span><span class="op">$</span><span class="va">dag</span><span class="op">)</span></span></span>
@@ -170,7 +198,7 @@ do not work. This approach has been suggested by Prof. Manuel C. Voelkle.</p>
 <span class="r-in"><span><span class="fu">bnlearn</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bnlearn/man/cpquery.html" class="external-link">cpquery</a></span><span class="op">(</span>fitted <span class="op">=</span> <span class="va">network</span><span class="op">$</span><span class="va">bayes_net</span>,</span></span>
 <span class="r-in"><span>                 event <span class="op">=</span> <span class="op">(</span><span class="va">dem65</span> <span class="op">&gt;</span> <span class="fl">1</span> <span class="op">&amp;</span> <span class="va">dem65</span> <span class="op">&lt;</span> <span class="fl">2</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                 evidence <span class="op">=</span> <span class="op">(</span><span class="va">dem60</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.3453705</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.3447854</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Get distribution under this assumption:</span></span></span>
 <span class="r-in"><span><span class="va">dist</span> <span class="op">&lt;-</span> <span class="fu">bnlearn</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bnlearn/man/cpquery.html" class="external-link">cpdist</a></span><span class="op">(</span>fitted <span class="op">=</span> <span class="va">network</span><span class="op">$</span><span class="va">bayes_net</span>,</span></span>
@@ -185,42 +213,42 @@ do not work. This approach has been suggested by Prof. Manuel C. Voelkle.</p>
 <span class="r-in"><span><span class="va">fit_sim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://jhorzek.github.io/mxsem/reference/mxsem.html" class="external-link">mxsem</a></span><span class="op">(</span><span class="va">model</span>,</span></span>
 <span class="r-in"><span>                 data <span class="op">=</span> <span class="va">sim</span><span class="op">[</span>,<span class="va">mx_model</span><span class="op">$</span><span class="va">manifestVars</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/mxTryHard.html" class="external-link">mxTryHard</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Running untitled2 with 39 parameters</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Running untitled38 with 39 parameters</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Beginning initial fit attempt</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Running untitled2 with 39 parameters</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Running untitled38 with 39 parameters</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  Lowest minimum so far:  17484187.6540198</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  Lowest minimum so far:  17703119.5195107</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  OpenMx status code 6 not in list of acceptable status codes, (0,0)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  Not all eigenvalues of the Hessian are positive: 2810469868.54716, 1792795847.05197, 1144478433.91078, 284057001.15646, 274699859.342902, 234034019.063359, 77711901.6185549, 58161726.5019482, 58010675.3643987, 46464444.7132084, 31186189.2482366, 18702013.0332961, 11861926.0106197, 5529378.58192065, 5198777.73831089, 3077952.93711128, 1781095.24712831, 1358391.2441052, 1178728.55843469, 1073582.46284275, 914431.810752561, 586346.422357504, 431809.737797082, 416894.748302949, 336569.444216387, 150771.202676502, 68291.7910864922, 45386.8581329202, 44428.5808243019, 28778.1756909989, 16277.9593804588, 13486.624484624, 9599.26830902301, 7910.33464241179, 5154.60659744072, 4089.62821064701, -687746.117153364, -19393852.0654035, -33305740.328856</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  Not all eigenvalues of the Hessian are positive: 2914338498.44273, 1812869865.95158, 1084954935.5846, 297212090.027587, 291973388.879885, 201545721.511776, 77711373.4250763, 61338573.7212463, 56078869.5418081, 44082464.1203594, 29475786.810217, 17210094.8330976, 12114265.3559555, 5658244.07604814, 5027522.97244289, 2885840.43479572, 1793254.59081873, 1432868.6585753, 1306320.30170179, 1132950.09688801, 918391.257137507, 643675.24184825, 401318.847882216, 328886.524197269, 288667.321154138, 147691.516446736, 66960.0131415541, 45316.5536944429, 44803.7782716291, 28827.7038644157, 16521.9760572714, 13522.2250711224, 9877.5459626002, 8999.90928061198, 5431.86868581075, 3911.40645385117, -713725.72758759, -18463926.4595984, -33723510.4312441</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Beginning fit attempt 1 of at maximum 10 extra tries</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Running untitled2 with 39 parameters</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Running untitled38 with 39 parameters</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  Lowest minimum so far:  413484.867580577</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  Lowest minimum so far:  413369.288632004</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Solution found</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  Solution found!  Final fit=413484.87 (started at 30044522)  (2 attempt(s): 2 valid, 0 errors)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  Solution found!  Final fit=413369.29 (started at 29964553)  (2 attempt(s): 2 valid, 0 errors)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  Start values from best fit:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 2.16900746556593,1.7987278308082,1.46532778108849,0.605494316657049,1.20428361958507,1.18692447942618,1.26081323845029,0.869129367799054,1.84960433741289,7.53086291969353,5.02589473705613,1.43640074565455,3.26881220768283,2.14508281881682,4.85364159368611,0.0805627839955393,0.131895674117963,0.452655366539125,0.619796609968507,2.39296713908209,0.640316624235759,3.47259814802898,0.332005503222796,1.30884067588896,3.30224372085807,0.459206330691456,3.82187113570309,0.177524437289919,5.45284896202368,4.22734715100006,6.57038195784203,4.4478513076247,2.9302069236568,5.05110510732778,4.78631141805914,3.56273380992829,5.11376248427418,6.16860352467449,4.0017206320309</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 2.16627427525228,1.7984159157888,1.46360461006967,0.612532022592901,1.19051519797498,1.183071028878,1.25339515280699,0.863522916008263,1.87001685447078,7.55509984343051,5.00113309825581,1.41850312719469,3.24628072102026,2.14786252370429,4.85642827145101,0.0801346348576689,0.133036608810701,0.452910665114826,0.638811377158028,2.417420535993,0.658467110230315,3.54523898226212,0.330828491210027,1.29270006753386,3.23219579001001,0.459682466016011,3.81854049877937,0.171211877754727,5.45174115463114,4.23699910113603,6.54812202910106,4.47180930709653,2.94698953612172,5.05064003805534,4.78367017508737,3.5616462187411,5.11127646830139,6.14553461128183,4.0317302839105</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit_sim</span><span class="op">)</span> <span class="op">-</span></span></span>
 <span class="r-in"><span>            <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mx_model</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mx_model</span><span class="op">)</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    ind60→x2    ind60→x3 ind60→dem60 ind60→dem65           a           b </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       0.005       0.011       0.004       0.008       0.011       0.011 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       0.006       0.011       0.005       0.020       0.000       0.007 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           c dem60→dem65       y1↔y1       y2↔y2       y3↔y3       y2↔y4 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       0.008       0.005       0.003       0.007       0.014       0.003 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       0.002       0.002       0.008       0.003       0.009       0.015 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       y4↔y4       y2↔y6       y6↔y6       x1↔x1       x2↔x2       x3↔x3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       0.014       0.017       0.023       0.010       0.095       0.030 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       0.007       0.016       0.022       0.015       0.105       0.029 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       y1↔y5       y5↔y5       y3↔y7       y7↔y7       y4↔y8       y6↔y8 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       0.064       0.035       0.100       0.025       0.085       0.046 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       0.097       0.045       0.075       0.004       0.088       0.058 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       y8↔y8 ind60↔ind60 dem60↔dem60 dem65↔dem65      one→y1      one→y2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       0.002       0.024       0.014       0.079       0.002       0.007 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       0.023       0.025       0.015       0.041       0.002       0.005 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      one→y3      one→y4      one→y6      one→x1      one→x2      one→x3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       0.001       0.001       0.016       0.001       0.001       0.001 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       0.002       0.004       0.010       0.001       0.002       0.001 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      one→y5      one→y7      one→y8 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       0.004       0.004       0.010 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       0.005       0.008       0.003 </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

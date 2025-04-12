@@ -311,11 +311,11 @@ samples.</p>
 <span><span class="co"># computing the expected value and the variance</span></span>
 <span><span class="co"># mean</span></span>
 <span><span class="op">(</span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">cond_dist</span><span class="op">$</span><span class="va">dem65</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">cond_dist</span>, <span class="st">"weights"</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">cond_dist</span>, <span class="st">"weights"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] -0.9431361</span></span>
+<span><span class="co">#&gt; [1] -0.9471441</span></span>
 <span><span class="co"># variance</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">cond_dist</span>, <span class="st">"weights"</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="va">cond_dist</span><span class="op">$</span><span class="va">dem65</span> <span class="op">-</span> <span class="va">m</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">/</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">cond_dist</span>, <span class="st">"weights"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 1.980133</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 1.990131</span></span></code></pre></div>
 <p>To get the interventional distribution, we can again use the
 mutilated network:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
@@ -327,11 +327,11 @@ mutilated network:</p>
 <span>                     method <span class="op">=</span> <span class="st">"lw"</span><span class="op">)</span></span>
 <span><span class="co"># mean</span></span>
 <span><span class="op">(</span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">inter_dist</span><span class="op">$</span><span class="va">dem65</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">inter_dist</span>, <span class="st">"weights"</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">inter_dist</span>, <span class="st">"weights"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] -0.0138729</span></span>
+<span><span class="co">#&gt; [1] -0.01412657</span></span>
 <span><span class="co"># variance</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">inter_dist</span>, <span class="st">"weights"</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="va">inter_dist</span><span class="op">$</span><span class="va">dem65</span> <span class="op">-</span> <span class="va">m</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">/</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">inter_dist</span>, <span class="st">"weights"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 4.553714</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 4.554579</span></span></code></pre></div>
 <p>Note that this is identical to the expected value of dem65 (0; with
 some numerical imprecision due to sampling).</p>
 <p>Let’s look at another example. To this end, we will first check the
@@ -343,11 +343,11 @@ mean and variance of x1 in our network.</p>
 <span>                        method <span class="op">=</span> <span class="st">"lw"</span><span class="op">)</span></span>
 <span><span class="co"># mean</span></span>
 <span><span class="op">(</span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">dist</span><span class="op">$</span><span class="va">x1</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">dist</span>, <span class="st">"weights"</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">dist</span>, <span class="st">"weights"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 5.062748</span></span>
+<span><span class="co">#&gt; [1] 5.062848</span></span>
 <span><span class="co"># variance</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">dist</span>, <span class="st">"weights"</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="va">dist</span><span class="op">$</span><span class="va">x1</span> <span class="op">-</span> <span class="va">m</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">/</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">dist</span>, <span class="st">"weights"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.5273265</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.5276746</span></span></code></pre></div>
 <p>Now, let’s check the conditional mean and variance of x1 are given
 that dem60 = 3</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
@@ -357,11 +357,11 @@ that dem60 = 3</p>
 <span>                             method <span class="op">=</span> <span class="st">"lw"</span><span class="op">)</span></span>
 <span><span class="co"># mean</span></span>
 <span><span class="op">(</span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">cond_dist</span><span class="op">$</span><span class="va">x1</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">cond_dist</span>, <span class="st">"weights"</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">cond_dist</span>, <span class="st">"weights"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 5.462281</span></span>
+<span><span class="co">#&gt; [1] 5.462163</span></span>
 <span><span class="co"># variance</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">cond_dist</span>, <span class="st">"weights"</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="va">cond_dist</span><span class="op">$</span><span class="va">x1</span> <span class="op">-</span> <span class="va">m</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">/</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">cond_dist</span>, <span class="st">"weights"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.4427529</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.4428409</span></span></code></pre></div>
 <p>Note how knowledge about dem60 provides us with information about the
 indicator x1 of ind60.</p>
 <p>When intervening on dem60, in contrast, we don’t change our
@@ -375,11 +375,11 @@ expectation for x1:</p>
 <span>                     method <span class="op">=</span> <span class="st">"lw"</span><span class="op">)</span></span>
 <span><span class="co"># mean</span></span>
 <span><span class="op">(</span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">inter_dist</span><span class="op">$</span><span class="va">x1</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">inter_dist</span>, <span class="st">"weights"</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">inter_dist</span>, <span class="st">"weights"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 5.051994</span></span>
+<span><span class="co">#&gt; [1] 5.052059</span></span>
 <span><span class="co"># variance</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">inter_dist</span>, <span class="st">"weights"</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="va">inter_dist</span><span class="op">$</span><span class="va">x1</span> <span class="op">-</span> <span class="va">m</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">/</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">inter_dist</span>, <span class="st">"weights"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.5299478</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.529606</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="bibliography">Bibliography<a class="anchor" aria-label="anchor" href="#bibliography"></a>
